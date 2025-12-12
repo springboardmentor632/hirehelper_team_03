@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import {connectDB} from './config/database.js';
 import authRoutes from './routes/userRoute.js';
-import loginRoutes from './routes/authRoute.js';
+
 
 dotenv.config();
 const app = express();
@@ -20,7 +20,7 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/api', authRoutes);
-app.use('/api/auth', loginRoutes);
+
 
 app.listen(PORT,()=>{
     console.log(`Server is running at http://localhost:${PORT}`);

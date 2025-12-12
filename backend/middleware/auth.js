@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'please_change_this_secret';
 
@@ -13,7 +11,7 @@ export const protect = (req, res, next) => {
   const token = header.split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // { id, email, role }
+    req.user = decoded; 
     next();
   } catch (err) {
     return res.status(401).json({ message: 'Token invalid or expired' });
