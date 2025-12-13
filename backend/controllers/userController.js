@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel.js';
-import { uploadToCloudinary } from '../cloudinaryConfig.js';
+import { uploadToCloudinary } from '../middleware/uploadProfile.js';
 import { generateOTP, sendEmailOTP } from '../utils/emailService.js';
 import {regiterSchema,otpSchema,verifyOtpSchema} from '../validtions/userValidators.js';
 import jwt from 'jsonwebtoken';
-import { uploadToCloudinary } from '../cloudinaryConfig.js'; 
+import { uploadToCloudinary } from '../middleware/uploadProfile.js'; 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'please_change_this_secret';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
