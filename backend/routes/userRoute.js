@@ -1,5 +1,5 @@
 import express from 'express';
-import { upload } from '../cloudinaryConfig.js';
+import { upload } from '../middleware/uploadProfile.js';
 import { signup,login, sendOtp, verifyOtp } from '../controllers/userController.js';
 
 const router = express.Router();
