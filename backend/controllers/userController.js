@@ -89,7 +89,10 @@ export const sendOtp = async (req, res) => {
         user.otpExpiry = expiryDate;
         await user.save();
         await sendEmailOTP(email_id, user.first_name, otp);
-       return res.status(200).json({ message: "OTP sent successfully" });
+       return res.status(200).json({ 
+        message: "OTP sent successfully" ,
+        user: { id: user._id, email_id: user.email_id }
+    });
     } catch (error) {
         res.status(500).json({ message: "Error sending OTP", error: error.message });
     }
