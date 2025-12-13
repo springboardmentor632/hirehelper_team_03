@@ -3,6 +3,13 @@ import User from '../models/userModel.js';
 import { uploadToCloudinary } from '../cloudinaryConfig.js';
 import { generateOTP, sendEmailOTP } from '../utils/emailService.js';
 import {regiterSchema,otpSchema,verifyOtpSchema} from '../validtions/userValidators.js';
+import jwt from 'jsonwebtoken';
+import { uploadToCloudinary } from '../cloudinaryConfig.js'; 
+
+const JWT_SECRET = process.env.JWT_SECRET || 'please_change_this_secret';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+
 
 export const signup = async (req, res) => {
     try {
@@ -131,4 +138,39 @@ export const verifyOtp = async (req, res) => {
         console.error("Verify OTP Error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
+};
+
+
+export const login = async (req, res) => {
+  try {
+    const { email_id, password } = req.body;
+    if (!email_id || !password) {
+      return res.status(400).json({ message: 'email and password required' });
+    }
+
+    const user = await User.findOne({ email_id });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign(
+      { id: user._id},
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    const userResp = {
+      id: user._id,
+      name: user.name,
+      email_id: user.email_id,
+      phone: user.phone,
+      role: user.role
+    };
+
+    return res.json({ user: userResp, token });
+  } catch (err) {
+    console.error('Login error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
 };
