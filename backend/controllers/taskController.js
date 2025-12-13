@@ -3,6 +3,12 @@ import { uploadTaskToCloudinary } from "../middleware/uploadTask.js";
 
 export const createTask = async (req, res) => {
   try {
+
+      if (!req.file) {
+      return res.status(400).json({
+        message: "Task image is required",
+      });
+    }
     const data = {
       user_id: req.user.id,
       title: req.body.title,
