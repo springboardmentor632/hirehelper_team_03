@@ -1,49 +1,22 @@
 @import "tailwindcss";
 
+/* Custom theme for your OTP */
 @theme {
-  /* --- 1. COLORS --- */
-  
-  /* Brand Colors */
-  /* Usage: bg-primary, text-primary */
-  --color-primary: #5FA4E6;
-  --color-primary-hover: #4A8AC4;
-  
-  /* Backgrounds */
-  /* Usage: bg-app, bg-card */
-  --color-app: #DBE6EA;      /* Renamed from bg-app to just 'app' for cleaner class name */
-  --color-card: #FFFFFF;
-  
-  /* Actions */
-  /* Usage: bg-success, text-danger */
-  --color-success: #10B949;
-  --color-danger: #E81C1C;
-  
-  /* Text */
-  /* Usage: text-main, text-muted */
-  --color-text-main: #1F2937;
-  --color-text-muted: #6B7280;
+  --color-screen: #dbe6ea;
+  --color-card: #b1deff;
+  --color-button: #5fa4e6;
+  --color-button-hover: #4a8ac4;
+  --color-text-primary: #5fa4e6;
+  --color-otp-box: #7bc6ff;
+  --color-borderbox: #a4d8ff;
 
-  /* --- 2. FONTS --- */
-  /* Usage: font-sans */
-  --font-sans: 'Inter', system-ui, sans-serif;
-
-  /* --- 3. BORDER RADIUS --- */
-  /* Usage: rounded-card, rounded-btn */
   --radius-card: 20px;
-  --radius-btn: 8px;
-
-  /* --- 4. SHADOWS --- */
-  /* Usage: shadow-card */
-  --shadow-card: 0 4px 15px rgba(0,0,0,0.05);
+  --radius-button: 10px;
+  --radius-otp: 4px;
 }
 
-/* --- GLOBAL STYLES --- */
-/* These go OUTSIDE the @theme block */
-
 body {
-  background-color: var(--color-app);
-  font-family: var(--font-sans);
-  color: var(--color-text-main);
   margin: 0;
-  /* Removed 'display: flex' and 'place-items: center' so your dashboard isn't centered like a button */
+  padding: 0;
+  font-family: system-ui, -apple-system, sans-serif;
 }
