@@ -13,8 +13,15 @@ export const regiterSchema = z.object({
     email_id: z.string()
         .refine((val) => validator.isEmail(val), { message: "Invalid email address" }),
     password: z.string()
-        .min(8, "Password must be at least 8 characters long")
-        .refine((val) => validator.isStrongPassword(val), { message: "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character" }),
+        .refine((val) => validator.isStrongPassword(val, {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+        }), {
+            message: "Password is too weak. Needs 1 Uppercase, 1 Lowercase, 1 Number, and 1 Special character"
+        }),
     confirm_password: z.string(),
     phone_number: z.string()
         .refine((val) => validator.isMobilePhone(val, 'en-IN'), { message: "Invalid phone number" }),
@@ -25,6 +32,21 @@ export const regiterSchema = z.object({
         message: "Passwords do not match",
     })
 
+export const loginSchema = z.object({
+    email_id: z.string()
+        .refine((val) => validator.isEmail(val), { message: "Invalid email address" }),
+    password: z.string()
+        .refine((val) => validator.isStrongPassword(val, {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+        }), {
+            message: "Password is too weak. Needs 1 Uppercase, 1 Lowercase, 1 Number, and 1 Special character"
+        })
+})
+
 export const otpSchema = z.object({
     email_id: z.string()
         .refine((val) => validator.isEmail(val), { message: "Invalid email address" }),
@@ -32,8 +54,42 @@ export const otpSchema = z.object({
 
 export const verifyOtpSchema = z.object({
     id: z.string()
-        .length(24, "Invalid user ID"),                                
+        .length(36, "Invalid user ID"),
     otp: z.string()
         .length(6, "OTP must be 6 digits")
         .refine((val) => validator.isNumeric(val), { message: "OTP must contain only numbers" }),
 })
+
+export const resetSchema = z.object({
+    email_id: z.string({
+        required_error: "Email is required"
+    }).refine(val => validator.isEmail(val), {
+        message: "Invalid email address"
+    }),
+    otp: z.string()
+        .length(6, {
+            message: "Invalid OTP"
+        })
+        .refine(val => validator.isNumeric(val), {
+            message: "Invalid OTP"
+        }),
+    newPassword: z.string()
+        .refine((val) => validator.isStrongPassword(val, {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+        }), {
+            message: "Password is too weak. Needs 1 Uppercase, 1 Lowercase, 1 Number, and 1 Special character"
+        }),
+    confirmPassword: z.string()
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Password do not match",
+    path: ["confirmPassword"]
+})
+
+export const resendOtpSchema = z.object({
+    email_id: z.string()
+        .refine((val) => validator.isEmail(val), { message: "Invalid email address" }),
+});
