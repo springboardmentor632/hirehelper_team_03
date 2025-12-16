@@ -1,24 +1,21 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Feed from "./pages/Feed";
 import MyTasks from "./pages/MyTasks";
 import AddTask from "./pages/AddTask";
+import Register from "./pages/Register";
 import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Home / Feed */}
-        <Route path="/" element={<Feed />} />
+    <Routes>
+      {/* Dashboard */}
+      <Route path="/" element={<Feed />} />
+      <Route path="/my-tasks" element={<MyTasks />} />
+      <Route path="/add-task" element={<AddTask />} />
 
-        {/* My Tasks */}
-        <Route path="/my-tasks" element={<MyTasks />} />
-
-        {/* Add Task */}
-        <Route path="/add-task" element={<AddTask />} />
-
-      </Routes>
-    </BrowserRouter>
+      {/* Auth */}
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
 }
 
