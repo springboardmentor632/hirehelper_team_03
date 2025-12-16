@@ -38,7 +38,7 @@ export default function MyTasks() {
         <div className="mb-6">
 
           {/* Top Row */}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-left gap-4">
 
             {/* Mobile Hamburger */}
             <button
