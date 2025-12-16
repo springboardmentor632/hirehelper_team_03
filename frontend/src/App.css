@@ -1,19 +1,27 @@
-/* src/App.css - TAILWIND CSS v4 VERSION */
+/* TAILWIND CSS v4 VERSION */
 @import "tailwindcss";
 
-/* Custom colors for Tailwind CSS v4 */
-@theme {
-  --color-screen: #dbe6ea;
-  --color-card: #b1deff;
-  --color-button: #5fa4e6;
-  --color-button-hover: #4a8ac4;
-  --color-text-primary: #5fa4e6;
-  --color-otp-box: #7bc6ff;
-  --color-borderbox: #a4d8ff;
+/* Custom colors for OTP page */
+@theme (
+  --color-screen: #dbebea;
+--color-card: #b1deff;
+--color-button: #5fa4e6;
+--color-button-hover: #4a8ac4;
+--color-text-primary: #5fa4e6;
+--color-otp-box: #7bc6ff;
+--color-borderbox: #a4d8ff;
+--radius-card: 20px;
+--radius-button: 10px;
+--radius-otp: 4px;
+)
 
-  --radius-card: 20px;
-  --radius-button: 10px;
-  --radius-otp: 4px;
+/* Global layout styles */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 body {
