@@ -32,7 +32,7 @@ export default function MyTasks() {
       )}
 
       {/* ================= Main Content ================= */}
-      <main className="flex-1 p-4 md:p-6 text-[var(--color-text-main)]">
+      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)]">
 
         {/* ================= Header ================= */}
         <div className="mb-6">

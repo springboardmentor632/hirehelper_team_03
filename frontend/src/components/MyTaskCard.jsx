@@ -1,4 +1,6 @@
 import { FiMapPin, FiClock, FiUser } from "react-icons/fi";
+import placeholder from "../assets/task-placeholder.png";
+
 
 export default function MyTaskCard() {
   return (
@@ -13,14 +15,12 @@ export default function MyTaskCard() {
       "
     >
       {/* Image placeholder */}
-      <div
-        className="
-          h-32
-          rounded-lg
-          mb-3
-          bg-[var(--color-bg-app)]
-        "
-      />
+      <img
+  src={placeholder}
+  alt="Task"
+  className="w-full h-40 object-cover rounded-[var(--radius-card)]"
+/>
+
 
       {/* Tags + Status */}
       <div className="flex gap-2 mb-2">
