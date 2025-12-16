@@ -69,7 +69,7 @@ export default function App() {
 
             {/* Phone field */}
             <div className="relative">
-              <FaPhone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
+              <FaPhone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7] transform scale-x-[-1]" size={14} />
               <input
                 type="tel"
                 name="phoneNumber"
