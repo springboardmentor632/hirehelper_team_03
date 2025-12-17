@@ -1,0 +1,72 @@
+import { FiMapPin, FiClock, FiUser } from "react-icons/fi";
+import placeholder from "../assets/task-placeholder.png";
+
+
+export default function MyTaskCard() {
+  return (
+    <div
+      className="
+        bg-[var(--color-bg-card)]
+        rounded-[var(--radius-card)]
+        shadow-[var(--shadow-card)]
+        p-4
+        w-full
+        max-w-sm
+      "
+    >
+      {/* Image placeholder */}
+      <img
+  src={placeholder}
+  alt="Task"
+  className="w-full h-40 object-cover rounded-[var(--radius-card)]"
+/>
+
+
+      {/* Tags + Status */}
+      <div className="flex gap-2 mb-2">
+        <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
+          tag 1
+        </span>
+        <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
+          tag 2
+        </span>
+        <span
+          className="
+            ml-auto
+            text-xs
+            px-2 py-0.5
+            rounded
+            bg-[var(--color-bg-app)]
+            text-[var(--color-text-main)]
+          "
+        >
+          status
+        </span>
+      </div>
+
+      {/* Title */}
+      <h3 className="font-semibold mb-1">Task Title</h3>
+
+      {/* Description */}
+      <p className="text-xs text-[var(--color-text-muted)] mb-3">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
+
+      {/* Location & Time */}
+      <div className="text-xs text-[var(--color-text-muted)] mb-3 space-y-1">
+        <p className="flex items-center gap-1">
+          <FiMapPin /> Bangalore, India
+        </p>
+        <p className="flex items-center gap-1">
+          <FiClock /> 7:00 - 8:30
+        </p>
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center gap-2 text-xs">
+        <FiUser />
+        <span>Sarah Johnson</span>
+      </div>
+    </div>
+  );
+}
