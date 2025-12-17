@@ -64,8 +64,6 @@ export const signup = async (req, res) => {
                 message: `${duplicateField} already exists`
             });
         }
-
-        console.error("Signup Error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
@@ -113,7 +111,6 @@ export const login = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("Login error:", err);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -142,7 +139,6 @@ export const forgotPassword = async (req, res) => {
         const otp = generateOTP();
         const expiryDate = new Date(Date.now() + 10 * 60 * 1000);
 
-        // reuse existing fields
         user.emailOtp = otp;
         user.otpExpiry = expiryDate;
         await user.save();
@@ -154,7 +150,6 @@ export const forgotPassword = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Forgot Password OTP Error:", error);
         res.status(500).json({ message: "Error sending OTP" });
     }
 };
@@ -199,7 +194,6 @@ export const verifyOtp = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Verify OTP Error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
@@ -279,7 +273,6 @@ export const resendOtp = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Resend OTP Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

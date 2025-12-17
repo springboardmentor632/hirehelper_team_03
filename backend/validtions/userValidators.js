@@ -82,11 +82,7 @@ export const resetSchema = z.object({
             minSymbols: 1,
         }), {
             message: "Password is too weak. Needs 1 Uppercase, 1 Lowercase, 1 Number, and 1 Special character"
-        }),
-    confirmPassword: z.string()
-}).refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Password do not match",
-    path: ["confirmPassword"]
+        })
 })
 
 export const resendOtpSchema = z.object({
