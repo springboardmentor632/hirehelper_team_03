@@ -263,11 +263,7 @@ export const resendOtp = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    if (user.isVerified) {
-      return res.status(400).json({
-        message: "Email already verified. OTP resend not allowed."
-      });
-    }
+    
 
     const otp = generateOTP();
     const expiryDate = new Date(Date.now() + 10 * 60 * 1000);
