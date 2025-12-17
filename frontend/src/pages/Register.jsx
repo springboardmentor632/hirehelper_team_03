@@ -14,18 +14,56 @@ export default function App() {
   
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
+    });
+
+    // Clear related validation errors while user types
+    setFormErrors(prev => {
+      const next = { ...prev };
+      if (name === 'password' || name === 'confirmPassword') {
+        delete next.password;
+        delete next.confirmPassword;
+      } else {
+        delete next[name];
+      }
+      return next;
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const errors = {};
+    const pwd = formData.password || '';
+
+    if (!pwd) {
+      errors.password = 'Password is required';
+    } else {
+      const req = [];
+      if (pwd.length < 8) req.push('at least 8 characters');
+      if (!/[A-Z]/.test(pwd)) req.push('an uppercase letter');
+      if (!/[a-z]/.test(pwd)) req.push('a lowercase letter');
+      if (!/[0-9]/.test(pwd)) req.push('a number');
+      if (!/[!@#$%^&*(),.?"':{}|<>\[\]\\/]/.test(pwd)) req.push('a special character');
+      if (req.length) errors.password = 'Password must include ' + req.join(', ');
+    }
+
+    if (pwd !== (formData.confirmPassword || '')) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+
+    setFormErrors(errors);
+    if (Object.keys(errors).length) return;
+
+    // Validation passed — proceed with submission
     console.log('Form submitted:', formData);
-    // Handle form submission here
+    // TODO: replace with real submission (API call)
   };
 
   return (
@@ -97,12 +135,14 @@ export default function App() {
             <div className="relative">
               <FaLock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
               <input
+                aria-invalid={!!formErrors.password}
+                aria-describedby={formErrors.password ? 'password-error' : undefined}
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 border-[#2a85c7] rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none focus:border-[#1582d0] transition-colors"
+                className={`w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 ${formErrors.password ? 'border-red-500' : 'border-[#2a85c7]'} rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none ${formErrors.password ? 'focus:border-red-500' : 'focus:border-[#1582d0]'} transition-colors`}
               />
               <button
                 type="button"
@@ -111,18 +151,23 @@ export default function App() {
               >
                 {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
               </button>
+              {formErrors.password && (
+                <p id="password-error" className="text-sm text-red-600 mt-1">{formErrors.password}</p>
+              )}
             </div>
 
             {/* Confirm Password field */}
             <div className="relative">
               <FaLock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
               <input
+                aria-invalid={!!formErrors.confirmPassword}
+                aria-describedby={formErrors.confirmPassword ? 'confirm-error' : undefined}
                 type={showConfirmPassword ? 'text' : 'password'}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 border-[#2a85c7] rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none focus:border-[#1582d0] transition-colors"
+                className={`w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 ${formErrors.confirmPassword ? 'border-red-500' : 'border-[#2a85c7]'} rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none ${formErrors.confirmPassword ? 'focus:border-red-500' : 'focus:border-[#1582d0]'} transition-colors`}
               />
               <button
                 type="button"
@@ -131,6 +176,9 @@ export default function App() {
               >
                 {showConfirmPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
               </button>
+              {formErrors.confirmPassword && (
+                <p id="confirm-error" className="text-sm text-red-600 mt-1">{formErrors.confirmPassword}</p>
+              )}
             </div>
 
             {/* Terms and conditions */}
