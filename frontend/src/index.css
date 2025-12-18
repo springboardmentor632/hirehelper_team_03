@@ -3,6 +3,46 @@
 ================================ */
 @import "tailwindcss";
 
+/* Custom theme for your OTP */
+@theme {
+  --color-screen: #dbe6ea;
+  --color-card: #b1deff;
+  --color-button: #5fa4e6;
+  --color-button-hover: #4a8ac4;
+  --color-text-primary: #5fa4e6;
+  --color-otp-box: #7bc6ff;
+  --color-borderbox: #a4d8ff;
+
+  --radius-card: 20px;
+  --radius-button: 10px;
+  --radius-otp: 4px;
+
+  /* Brand */
+  --color-primary: #5fa4e6;
+  --color-primary-hover: #4a8ac4;
+
+  /* Backgrounds */
+  --color-app: #dbe6ea;
+
+  /* Actions */
+  --color-success: #10b949;
+  --color-danger: #e81c1c;
+
+  /* Text */
+  --color-text-main: #1f2937;
+  --color-text-muted: #6b7280;
+
+  /* -------- TYPOGRAPHY -------- */
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* -------- SHAPE -------- */
+
+  --radius-btn: 8px;
+
+  /* -------- SHADOWS -------- */
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
 @keyframes slide-in {
   from {
     transform: translateX(-100%);
@@ -16,40 +56,10 @@
   animation: slide-in 0.25s ease-out forwards;
 }
 
-
 /* ================================
    Theme Tokens (Design System)
    Used via Tailwind arbitrary values
 ================================ */
-@theme {
-  /* -------- COLORS -------- */
-
-  /* Brand */
-  --color-primary: #5FA4E6;
-  --color-primary-hover: #4A8AC4;
-
-  /* Backgrounds */
-  --color-app: #DBE6EA;
-  --color-card: #FFFFFF;
-
-  /* Actions */
-  --color-success: #10B949;
-  --color-danger: #E81C1C;
-
-  /* Text */
-  --color-text-main: #1F2937;
-  --color-text-muted: #6B7280;
-
-  /* -------- TYPOGRAPHY -------- */
-  --font-sans: 'Inter', system-ui, sans-serif;
-
-  /* -------- SHAPE -------- */
-  --radius-card: 20px;
-  --radius-btn: 8px;
-
-  /* -------- SHADOWS -------- */
-  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
 
 /* ================================
    Global Reset & Fullscreen Fix
@@ -79,11 +89,10 @@ body {
   padding: 0 12px;
   border-radius: var(--radius-button);
   border: 1px solid var(--color-text-muted);
-  background: var(--color-bg-app);
+  background: var(--color-app);
   font-size: 14px;
   color: var(--color-text-main);
 }
-
 
 /* ================================
    Optional Global Enhancements
