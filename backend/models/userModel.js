@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 const userSchema = new mongoose.Schema({
   _id: {
     type: String,
-    default: uuidv4, 
+    default: uuidv4,
   },
   first_name: {
     type: String,
@@ -31,6 +31,16 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailOtp: {
+    type: String
+  },
+  otpExpiry: {
+    type: Date
   },
   profile_picture: {
     type: String,
