@@ -1,4 +1,7 @@
-import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import {
   FaBox,
   FaTruck,
@@ -10,6 +13,27 @@ import {
 
 export default function OTPVerification() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Empty OTP
+  const [isResendDisabled, setIsResendDisabled] = useState(false);
+  const [resendTimer, setResendTimer] = useState(30);
+  const navigate = useNavigate();
+
+  // Timer effect
+  useEffect(() => {
+    let interval;
+    if (isResendDisabled && resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsResendDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isResendDisabled, resendTimer]);
 
   const handleOtpChange = (index, value) => {
     if (/^[0-9]?$/.test(value)) {
@@ -36,21 +60,65 @@ export default function OTPVerification() {
     }
   };
 
-  const handleSubmit = (e) => {
+  // API: Verify OTP
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const otpString = otp.join("");
-    if (otpString.length === 6) {
-      console.log("OTP submitted:", otpString);
-      // Handle OTP verification here
-      alert(`OTP ${otpString} verified successfully!`);
+    if (otpString.length !== 6) {
+      alert("Please enter a 6-digit OTP");
+      return;
+    }
+
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("User not found. Please signup again.");
+        return;
+      }
+
+      const res = await axios.post(
+        "http://localhost:5000/api/user/verify-otp",
+        {
+          id: userId,
+          otp: otpString,
+        }
+      );
+
+      alert(res.data.message);
+
+      // Clear localStorage and redirect
+      localStorage.removeItem("userId");
+      localStorage.removeItem("email");
+      navigate("/login");
+    } catch (error) {
+      alert(error.response?.data?.message || "OTP verification failed");
     }
   };
 
-  const handleResend = () => {
-    console.log("Resending OTP...");
-    // Handle OTP resend here
-    setOtp(["", "", "", "", "", ""]); // Clear OTP boxes
-    alert("New OTP sent to your email!");
+  // API: Resend OTP
+  const handleResend = async () => {
+    if (isResendDisabled) return;
+
+    try {
+      const email = localStorage.getItem("email");
+      if (!email) {
+        alert("Email not found. Please signup again.");
+        return;
+      }
+
+      await axios.post("http://localhost:5000/api/user/resend-otp", {
+        email_id: email,
+      });
+
+      setOtp(["", "", "", "", "", ""]);
+      alert("New OTP sent to your email!");
+
+      // Start timer
+      setIsResendDisabled(true);
+      setResendTimer(30);
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to resend OTP");
+    }
   };
 
   return (
@@ -275,14 +343,15 @@ export default function OTPVerification() {
 
             {/* Resend code option */}
             <div className="text-center pt-1 sm:pt-2 md:pt-3">
-              <p className="text-[9px] sm:text-[11px] md:text-[12px] lg:text-[13px] text-[#2a85c7]">
+              <p className="text-[11px] sm:text-[13px] md:text-[14px] lg:text-[15px] text-[#2a85c7]">
                 Didn't receive the code?{" "}
                 <button
                   type="button"
                   onClick={handleResend}
-                  className="underline cursor-pointer hover:text-[#1582d0] transition-colors font-medium text-[10px] sm:text-[11px]"
+                  disabled={isResendDisabled}
+                  className="underline cursor-pointer hover:text-[#1582d0] transition-colors font-medium text-[11px] sm:text-[13px] md:text-[14px] lg:text-[15px]"
                 >
-                  Resend
+                  {isResendDisabled ? `Resend in ${resendTimer}s` : "Resend"}
                 </button>
               </p>
             </div>
