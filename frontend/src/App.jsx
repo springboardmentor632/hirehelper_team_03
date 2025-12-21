@@ -4,6 +4,8 @@ import Feed from "./pages/Feed";
 import MyTasks from "./pages/MyTasks";
 import AddTask from "./pages/AddTask";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
+
 import "./App.css";
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
       {/* Auth */}
 
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 }
