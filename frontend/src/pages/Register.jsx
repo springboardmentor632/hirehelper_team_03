@@ -19,9 +19,9 @@ import AuthBackground from "../components/AuthBackground";
 
 export default function App() {
   const [formData, setFormData] = useState({
-    first_Name: "", //Must match backend: first_name
-    last_Name: "",
-    phone_Number: "",
+    first_name: "", //Must match backend: first_name
+    last_name: "",
+    phone_number: "",
     email_id: "",
     password: "",
     confirmPassword: "",
