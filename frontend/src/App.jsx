@@ -5,23 +5,45 @@ import MyTasks from "./pages/MyTasks";
 import AddTask from "./pages/AddTask";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-
-import "./App.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
-      {/* Auth routes */}
+      {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<OTPVerification />} />
 
-      {/* Dashboard routes */}
-      <Route path="/" element={<Feed />} />
-      <Route path="/my-tasks" element={<MyTasks />} />
-      <Route path="/add-task" element={<AddTask />} />
+      {/* Protected */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Feed />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Catch-all redirect (optional for now) */}
+      <Route
+        path="/my-tasks"
+        element={
+          <ProtectedRoute>
+            <MyTasks />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/add-task"
+        element={
+          <ProtectedRoute>
+            <AddTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Fallback */}
       <Route path="*" element={<Login />} />
     </Routes>
   );

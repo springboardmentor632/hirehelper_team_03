@@ -8,7 +8,7 @@ export default function MyTasks() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex">
+    <div className="min-h-screen w-full bg-(--color-bg-app) flex">
 
       {/* ================= Desktop Sidebar ================= */}
       <div className="hidden md:block">
@@ -32,7 +32,7 @@ export default function MyTasks() {
       )}
 
       {/* ================= Main Content ================= */}
-      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)]">
+      <main className="flex-1 p-4 md:p-6 text-left text-text-main">
 
         {/* ================= Header ================= */}
         <div className="mb-6">
@@ -42,7 +42,7 @@ export default function MyTasks() {
 
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden text-2xl text-[var(--color-text-main)]"
+              className="md:hidden text-2xl text-text-main"
               onClick={() => setSidebarOpen(true)}
             >
               <FiMenu />
@@ -51,7 +51,7 @@ export default function MyTasks() {
             {/* Title */}
             <div className="flex-1">
               <h1 className="text-xl font-semibold">My Tasks</h1>
-              <p className="text-sm text-[var(--color-text-muted)]">
+              <p className="text-sm text-text-muted">
                 Manage your posted tasks
               </p>
             </div>
@@ -66,7 +66,7 @@ export default function MyTasks() {
 
 
               {/* Notification Bell (VISIBLE ON ALL SCREENS) */}
-              <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]" />
+              <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
             </div>
           </div>
 

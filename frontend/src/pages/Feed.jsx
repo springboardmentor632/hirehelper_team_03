@@ -9,14 +9,6 @@ export default function Feed() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token"); // or "user"
-
-    if (!token) {
-      navigate("/login", { replace: true });
-    }
-  }, [navigate]);
-
   return (
     <div className="min-h-screen w-full bg-(--color-bg-app) flex">
 

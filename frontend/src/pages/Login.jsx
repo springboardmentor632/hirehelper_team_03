@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
-import axios from "axios"
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,45 +11,38 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  try {
-    const res = await axios.post(
-      "http://localhost:5000/api/login",
-      {
-        email_id: email,
-        password: password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/login",
+        {
+          email_id: email,
+          password: password,
         },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      navigate("/", { replace: true }); // dashboard
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message || "Login failed");
+      } else if (err.request) {
+        setError("Unable to connect to server.");
+      } else {
+        setError("Something went wrong.");
       }
-    );
-
-    // ✅ Success
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
-
-    alert(res.data.message); // "Login successful"
-
-    navigate("/");
-
-  } catch (err) {
-    // ❌ Backend responded with error
-    if (err.response) {
-      alert(err.response.data.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
-    // ❌ Request sent but no response (server down)
-    else if (err.request) {
-      alert("Unable to connect to server. Please try again later.");
-    }
-    // ❌ Something else
-    else {
-      alert("Something went wrong.");
-    }
-  }
-};
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#dbe9e6] flex items-center justify-center">
@@ -107,9 +100,7 @@ export default function Login() {
 
           {/* ERROR MESSAGE */}
           {error && (
-            <p className="text-red-600 text-sm text-center mb-4">
-              {error}
-            </p>
+            <p className="text-red-600 text-sm text-center mb-4">{error}</p>
           )}
 
           {/* REMEMBER */}
@@ -118,9 +109,7 @@ export default function Login() {
               <input type="checkbox" />
               Remember me
             </label>
-            <span className="underline cursor-pointer">
-              Forgot password?
-            </span>
+            <span className="underline cursor-pointer">Forgot password?</span>
           </div>
 
           <div className="flex justify-center">
