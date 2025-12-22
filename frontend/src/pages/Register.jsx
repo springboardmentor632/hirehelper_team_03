@@ -1,31 +1,118 @@
-import { useState } from 'react';
-import { FaUser, FaPhone, FaEnvelope, FaLock, FaBox, FaTruck, FaMusic, FaBook, FaChartBar, FaEye, FaEyeSlash, FaBriefcase } from 'react-icons/fa';
-import AuthBackground from '../components/AuthBackground';
+import { useState } from "react";
+import axios from "axios"; //  API calls
+import { useNavigate } from "react-router-dom"; // Navigation
+import {
+  FaUser,
+  FaPhone,
+  FaEnvelope,
+  FaLock,
+  FaBox,
+  FaTruck,
+  FaMusic,
+  FaBook,
+  FaChartBar,
+  FaEye,
+  FaEyeSlash,
+  FaBriefcase,
+} from "react-icons/fa";
+import AuthBackground from "../components/AuthBackground";
 
 export default function App() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    first_name: "", //Must match backend: first_name
+    last_name: "",
+    phone_number: "",
+    email_id: "",
+    password: "",
+    confirmPassword: "",
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
+    setError("");
+
+    // Frontend validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // API INTEGRATION - Signup
+      const response = await axios.post(
+        "http://localhost:5000/api/user/signup",
+        {
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          phone_number: formData.phone_number,
+          email_id: formData.email_id,
+          password: formData.password,
+          // profile_picture: null (optional )
+        }
+      );
+
+      console.log("Signup response:", response.data);
+
+      //  Store user data in localStorage for OTP page
+      localStorage.setItem("userId", response.data.user.id); // For verify-otp
+      localStorage.setItem("email", response.data.user.email_id); // For resend-otp
+      localStorage.setItem(
+        "name",
+        `${formData.first_name} ${formData.last_name}`
+      );
+
+      alert(
+        response.data.message || "Signup successful! Check your email for OTP."
+      );
+
+      //  REDIRECT TO OTP VERIFICATION PAGE
+      navigate("/verify-email");
+    } catch (error) {
+      console.error("Signup error:", error);
+
+      if (error.response) {
+        // Backend validation errors
+        if (error.response.status === 400) {
+          setError(error.response.data.message || "Validation failed");
+        } else if (error.response.status === 500) {
+          setError("Server error. Please try again.");
+        } else {
+          setError(error.response.data.message || "Signup failed");
+        }
+      } else if (error.request) {
+        setError("No response from server. Check connection.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //  Redirect to login page
+  const handleLoginRedirect = () => {
+    navigate("/login");
   };
 
   return (
@@ -40,27 +127,36 @@ export default function App() {
             REGISTER
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-5 xl:space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3 sm:space-y-4 md:space-y-5 xl:space-y-6"
+          >
             {/* Name fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
               <div className="relative">
-                <FaUser className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
+                <FaUser
+                  className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]"
+                  size={14}
+                />
                 <input
                   type="text"
-                  name="firstName"
+                  name="first_name"
                   placeholder="First Name"
-                  value={formData.firstName}
+                  value={formData.first_name}
                   onChange={handleChange}
                   className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 border-[#2a85c7] rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none focus:border-[#1582d0] transition-colors"
                 />
               </div>
               <div className="relative">
-                <FaUser className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
+                <FaUser
+                  className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]"
+                  size={14}
+                />
                 <input
                   type="text"
-                  name="lastName"
+                  name="last_name"
                   placeholder="Last Name"
-                  value={formData.lastName}
+                  value={formData.last_name}
                   onChange={handleChange}
                   className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 border-[#2a85c7] rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none focus:border-[#1582d0] transition-colors"
                 />
@@ -69,12 +165,15 @@ export default function App() {
 
             {/* Phone field */}
             <div className="relative">
-              <FaPhone className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7] transform scale-x-[-1]" size={14} />
+              <FaPhone
+                className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7] transform scale-x-[-1]"
+                size={14}
+              />
               <input
                 type="tel"
-                name="phoneNumber"
+                name="phone_number"
                 placeholder="Phone Number"
-                value={formData.phoneNumber}
+                value={formData.phone_number}
                 onChange={handleChange}
                 className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 border-[#2a85c7] rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none focus:border-[#1582d0] transition-colors"
               />
@@ -82,12 +181,15 @@ export default function App() {
 
             {/* Email field */}
             <div className="relative">
-              <FaEnvelope className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
+              <FaEnvelope
+                className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]"
+                size={14}
+              />
               <input
                 type="email"
-                name="email"
+                name="email_id"
                 placeholder="Email"
-                value={formData.email}
+                value={formData.email_id}
                 onChange={handleChange}
                 className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-2.5 xl:py-3 bg-transparent border-b-2 border-[#2a85c7] rounded-lg text-[#2a85c7] placeholder-[#2a85c7] placeholder:text-sm sm:placeholder:text-base focus:outline-none focus:border-[#1582d0] transition-colors"
               />
@@ -95,9 +197,12 @@ export default function App() {
 
             {/* Password field */}
             <div className="relative">
-              <FaLock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
+              <FaLock
+                className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]"
+                size={14}
+              />
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password"
                 value={formData.password}
@@ -115,9 +220,12 @@ export default function App() {
 
             {/* Confirm Password field */}
             <div className="relative">
-              <FaLock className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]" size={14} />
+              <FaLock
+                className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-[#2a85c7]"
+                size={14}
+              />
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
@@ -129,14 +237,20 @@ export default function App() {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-[#2a85c7] hover:text-[#1582d0] transition-colors"
               >
-                {showConfirmPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                {showConfirmPassword ? (
+                  <FaEyeSlash size={14} />
+                ) : (
+                  <FaEye size={14} />
+                )}
               </button>
             </div>
 
             {/* Terms and conditions */}
             <p className="text-[11px] sm:text-[12px] text-[#2a85c7] italic text-center sm:text-left pt-1">
-              By signing up, You agree to our{' '}
-              <span className="underline cursor-pointer hover:text-[#1582d0] transition-colors">Terms & Conditions</span>
+              By signing up, You agree to our{" "}
+              <span className="underline cursor-pointer hover:text-[#1582d0] transition-colors">
+                Terms & Conditions
+              </span>
             </p>
 
             {/* Submit button */}
