@@ -260,6 +260,17 @@ export default function App() {
                 <span className="text-sm sm:text-base">Sign Up</span>
               </button>
             </div>
+            <div className="text-center mt-4">
+            <p className="text-sm text-[#2a85c7]">
+              Already registered?{" "}
+              <span
+                onClick={() => navigate("/login")}
+                className="underline cursor-pointer hover:text-[#1582d0] font-medium"
+              >
+                Login here
+              </span>
+            </p>
+          </div>
           </form>
         </div>
       </div>

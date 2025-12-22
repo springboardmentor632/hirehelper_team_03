@@ -123,6 +123,19 @@ export default function Login() {
               {loading ? "Logging in..." : "Login"}
             </button>
           </div>
+
+          {/* REGISTER LINK */}
+          <div className="text-center mt-4">
+            <p className="text-sm text-[#2a85c7]">
+              New User?{" "}
+              <span
+                onClick={() => navigate("/register")}
+                className="underline cursor-pointer hover:text-[#1582d0] font-medium"
+              >
+                Register here
+              </span>
+            </p>
+          </div>
         </form>
       </div>
     </div>
