@@ -72,26 +72,27 @@ export default function OTPVerification() {
     try {
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        alert("User not found. Please signup again.");
+        alert("User not found. Please register first.");
+        navigate("/register"); // Redirect to registration page
         return;
       }
 
-      const res = await axios.post(
-        "http://localhost:5000/api/user/verify-otp",
-        {
-          id: userId,
-          otp: otpString,
-        }
-      );
+      const res = await axios.post("http://localhost:5000/api/verify-otp", {
+        id: userId,
+        otp: otpString,
+      });
 
-      alert(res.data.message);
+      alert(res.data.message || "OTP verified successfully");
 
-      // Clear localStorage and redirect
+      // Clear localStorage and redirect to login
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
       navigate("/login");
     } catch (error) {
-      alert(error.response?.data?.message || "OTP verification failed");
+      const message =
+        error.response?.data?.message ||
+        "OTP verification failed. Please try again.";
+      alert(message);
     }
   };
 
@@ -106,18 +107,22 @@ export default function OTPVerification() {
         return;
       }
 
-      await axios.post("http://localhost:5000/api/user/resend-otp", {
+      const res = await axios.post("http://localhost:5000/api/resend-otp", {
         email_id: email,
       });
 
       setOtp(["", "", "", "", "", ""]);
-      alert("New OTP sent to your email!");
+      // Show backend message in alert
+      alert(res.data.message || "New OTP sent to your email!");
 
       // Start timer
       setIsResendDisabled(true);
       setResendTimer(30);
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to resend OTP");
+      const message =
+        error.response?.data?.message ||
+        "Failed to resend OTP. Please try again.";
+      alert(message);
     }
   };
 

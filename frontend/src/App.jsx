@@ -11,18 +11,18 @@ import "./App.css";
 function App() {
   return (
     <Routes>
-      {/* OTP Verification Page */}
+      {/* Auth routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<OTPVerification />} />
 
-      {/* Dashboard */}
+      {/* Dashboard routes */}
       <Route path="/" element={<Feed />} />
       <Route path="/my-tasks" element={<MyTasks />} />
       <Route path="/add-task" element={<AddTask />} />
 
-      {/* Auth */}
-
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+      {/* Catch-all redirect (optional for now) */}
+      <Route path="*" element={<Login />} />
     </Routes>
   );
 }

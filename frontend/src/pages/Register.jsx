@@ -43,40 +43,29 @@ export default function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     // Frontend validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+      alert("Passwords don't match");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // API INTEGRATION - Signup
-      const response = await axios.post(
-        "http://localhost:5000/api/user/signup",
-        {
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          phone_number: formData.phone_number,
-          email_id: formData.email_id,
-          password: formData.password,
-          // profile_picture: null (optional )
-        }
-      );
+      // API call
+      const response = await axios.post("http://localhost:5000/api/signup", {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        phone_number: formData.phone_number,
+        email_id: formData.email_id,
+        password: formData.password,
+        profile_picture: null,
+      });
 
-      console.log("Signup response:", response.data);
-
-      //  Store user data in localStorage for OTP page
-      localStorage.setItem("userId", response.data.user.id); // For verify-otp
-      localStorage.setItem("email", response.data.user.email_id); // For resend-otp
+      // Signup success
+      localStorage.setItem("userId", response.data.user.id);
+      localStorage.setItem("email", response.data.user.email_id);
       localStorage.setItem(
         "name",
         `${formData.first_name} ${formData.last_name}`
@@ -85,25 +74,33 @@ export default function App() {
       alert(
         response.data.message || "Signup successful! Check your email for OTP."
       );
-
-      //  REDIRECT TO OTP VERIFICATION PAGE
-      navigate("/verify-email");
+      navigate("/otp");
     } catch (error) {
-      console.error("Signup error:", error);
-
       if (error.response) {
-        // Backend validation errors
-        if (error.response.status === 400) {
-          setError(error.response.data.message || "Validation failed");
-        } else if (error.response.status === 500) {
-          setError("Server error. Please try again.");
-        } else {
-          setError(error.response.data.message || "Signup failed");
+        const backendMessage = error.response.data.message || "Signup failed";
+
+        // User exists but not verified
+        if (
+          backendMessage.includes("already exists") &&
+          error.response.data.isVerified === false
+        ) {
+          alert("User already registered but not verified. Check OTP.");
+          localStorage.setItem("email", formData.email_id); // for OTP resend
+          navigate("/otp");
+        }
+        // User exists and verified
+        else if (backendMessage.includes("already exists")) {
+          alert("User already registered. Please login.");
+          navigate("/login");
+        }
+        // Other backend errors
+        else {
+          alert(backendMessage);
         }
       } else if (error.request) {
-        setError("No response from server. Check connection.");
+        alert("No response from server. Check your connection.");
       } else {
-        setError("An unexpected error occurred.");
+        alert("An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);
