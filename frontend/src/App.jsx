@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import OTPVerification from "./pages/otp";
+import ForgotPassword from "./pages/ForgotPassword";
 import Feed from "./pages/Feed";
 import MyTasks from "./pages/MyTasks";
 import AddTask from "./pages/AddTask";
@@ -13,6 +14,7 @@ function App() {
       {/* Auth */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/otp" element={<OTPVerification />} />
 
       {/* Protected */}
