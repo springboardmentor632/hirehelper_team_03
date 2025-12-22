@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ← ADD THIS IMPORT
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
 import axios from "axios";
 
 export default function Login() {
+  const navigate = useNavigate(); // ← ADD THIS LINE
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +32,7 @@ export default function Login() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      navigate("/", { replace: true }); // dashboard
+      navigate("/", { replace: true }); // This will now work!
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message || "Login failed");
