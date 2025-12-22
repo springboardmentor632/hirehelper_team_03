@@ -3,68 +3,138 @@ import { uploadTaskToCloudinary } from "../middleware/uploadTask.js";
 
 export const createTask = async (req, res) => {
   try {
-
-      if (!req.file) {
+    const { title, description, location, start_time, end_time } = req.body;
+    if (!title || !description || !location || !start_time) {
       return res.status(400).json({
-        message: "Task image is required",
+        message: "All required fields must be provided"
       });
     }
     const data = {
       user_id: req.user.id,
-      title: req.body.title,
-      description: req.body.description,
-      location: req.body.location,
-      start_time: new Date(req.body.start_time),
-      end_time: req.body.end_time ? new Date(req.body.end_time) : null,
+      title,
+      description,
+      location,
+      start_time: new Date(start_time),
+      end_time: end_time ? new Date(end_time) : null,
     };
-
     if (req.file) {
       const result = await uploadTaskToCloudinary(req.file.buffer);
       data.picture = result.secure_url;
     }
-
     const task = await Task.create(data);
-    res.status(201).json(task);
-  } catch (e) {
-    res.status(500).json({ error: "Server error" });
+    return res.status(201).json({
+      message: "Task created successfully",
+      task
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
 export const getAllTasks = async (req, res) => {
-  const tasks = await Task.find({ user_id: req.user.id }).sort({ start_time: 1 });
-  res.json(tasks);
+  try {
+    const tasks = await Task.find({ user_id: req.user.id })
+      .sort({ start_time: 1 });
+    if (tasks.length === 0) {
+      return res.status(200).json({
+        message: "No task found",
+        tasks: []
+      });
+    }
+    return res.status(200).json({ tasks });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
 };
 
-export const getTaskById = async (req, res) => {
-  const task = await Task.findOne({ _id: req.params.id, user_id: req.user.id });
-  if (!task) return res.status(404).json({ error: "Task not found" });
-  res.json(task);
-};
+export const getTaskFeed = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const filter = { user_id: { $ne: req.user.id } };
+
+    const totalTasks = await Task.countDocuments(filter);
+
+    const tasks = await Task.find(filter)
+      .sort({ start_time: 1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("user_id", "first_name last_name profile_picture");
+
+    if (tasks.length === 0) {
+      return res.status(200).json({
+        message: "No tasks available",
+        tasks: [],
+        pagination: {
+          totalTasks,
+          totalPages: 0,
+          currentPage: page
+        }
+      });
+    }
+
+    return res.status(200).json({
+      tasks,
+      pagination: {
+        totalTasks,
+        totalPages: Math.ceil(totalTasks / limit),
+        currentPage: page,
+        limit
+      }
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
 
 export const updateTask = async (req, res) => {
-  const updates = req.body;
+  try {
+    const updates = req.body;
 
-  if (req.file) {
-    const result = await uploadTaskToCloudinary(req.file.buffer);
-    updates.picture = result.secure_url;
+    if (req.file) {
+      const result = await uploadTaskToCloudinary(req.file.buffer);
+      updates.picture = result.secure_url;
+    }
+
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, user_id: req.user.id },
+      updates,
+      { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    return res.status(200).json({
+      message: "Task updated successfully",
+      task
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
   }
-
-  const task = await Task.findOneAndUpdate(
-    { _id: req.params.id, user_id: req.user.id },
-    updates,
-    { new: true }
-  );
-
-  if (!task) return res.status(404).json({ error: "Task not found" });
-  res.json(task);
 };
 
 export const deleteTask = async (req, res) => {
-  const task = await Task.findOneAndDelete({
-    _id: req.params.id,
-    user_id: req.user.id,
-  });
+  try {
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      user_id: req.user.id,
+    });
 
-  if (!task) return res.status(404).json({ error: "Task not found" });
-  res.json({ message: "Task deleted" });
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    return res.status(200).json({ message: "Task deleted successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
 };
