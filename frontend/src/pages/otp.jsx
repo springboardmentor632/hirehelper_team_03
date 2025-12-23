@@ -14,7 +14,7 @@ import {
 export default function OTPVerification() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Empty OTP
   const [isResendDisabled, setIsResendDisabled] = useState(false);
-  const [resendTimer, setResendTimer] = useState(30);
+  const [resendTimer, setResendTimer] = useState(600);
   const navigate = useNavigate();
 
   // Timer effect
@@ -117,7 +117,7 @@ export default function OTPVerification() {
 
       // Start timer
       setIsResendDisabled(true);
-      setResendTimer(30);
+      setResendTimer(600);
     } catch (error) {
       const message =
         error.response?.data?.message ||
@@ -356,7 +356,11 @@ export default function OTPVerification() {
                   disabled={isResendDisabled}
                   className="underline cursor-pointer hover:text-[#1582d0] transition-colors font-medium text-[11px] sm:text-[13px] md:text-[14px] lg:text-[15px]"
                 >
-                  {isResendDisabled ? `Resend in ${resendTimer}s` : "Resend"}
+                  {isResendDisabled
+                    ? `Resend in ${Math.floor(resendTimer / 60)}:${String(
+                        resendTimer % 60
+                      ).padStart(2, "0")}`
+                    : "Resend"}
                 </button>
               </p>
             </div>
