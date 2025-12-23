@@ -7,12 +7,21 @@ import {
   FiLogOut,
   FiX
 } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Sidebar({ onClose }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear all stored auth/user data
+    localStorage.clear();
+
+    // Redirect to login
+    navigate("/login");
+  };
+
   return (
     <aside className="w-64 min-h-screen bg-[var(--color-primary)] text-white flex flex-col justify-between">
-
       {/* Logo + Close */}
       <div>
         <div className="px-6 py-5 text-xl font-bold flex items-center justify-between">
@@ -48,7 +57,12 @@ export default function Sidebar({ onClose }) {
           </div>
         </div>
 
-        <FiLogOut className="cursor-pointer opacity-80 hover:opacity-100" />
+        {/* Logout */}
+        <FiLogOut
+          onClick={handleLogout}
+          className="cursor-pointer opacity-80 hover:opacity-100"
+          title="Logout"
+        />
       </div>
     </aside>
   );

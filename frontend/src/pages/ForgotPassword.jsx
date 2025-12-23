@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { FaEnvelope, FaArrowLeft, FaLock } from "react-icons/fa";
 
 const AuthBackground = () => {
@@ -26,21 +27,26 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  /* ================= SEND OTP ================= */
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await axios.post("http://localhost:5000/api/forgot-password", { email_id:email });
       setStep("reset");
-    } catch {
-      setError("Failed to send OTP. Please try again.");
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+          "Failed to send OTP. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  /* ================= OTP HANDLERS ================= */
   const handleOtpChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) return;
 
@@ -59,7 +65,8 @@ export default function ForgotPassword() {
     }
   };
 
-  const handleResetPassword = (e) => {
+  /* ================= RESET PASSWORD ================= */
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -68,18 +75,44 @@ export default function ForgotPassword() {
       return;
     }
 
-    // Later: API call
-    window.location.href = "/login";
+    const otpValue = otp.join("");
+    if (otpValue.length !== 6) {
+      setError("Please enter a valid 6-digit OTP.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await axios.post("http://localhost:5000/api/reset-password", {
+        email_id: email,
+        otp: otpValue,
+        newPassword,
+      });
+
+      window.location.href = "/login";
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+          "Failed to reset password. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
+  /* ================= RESEND OTP ================= */
   const handleResendOtp = async () => {
     setLoading(true);
     setError("");
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch {
-      setError("Failed to resend OTP.");
+      await axios.post("/api/forgot-password", { email });
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+          "Failed to resend OTP. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -153,7 +186,6 @@ export default function ForgotPassword() {
               </p>
 
               <form onSubmit={handleResetPassword} className="space-y-4">
-                {/* OTP BOXES */}
                 <div className="flex justify-between gap-2 sm:gap-3">
                   {otp.map((digit, index) => (
                     <input
@@ -216,14 +248,14 @@ export default function ForgotPassword() {
                 <div className="flex justify-center pt-3">
                   <button
                     type="submit"
-                    className="bg-[#2a85c7] text-white px-10 py-2.5 rounded-xl hover:bg-[#1582d0] transition-all shadow-lg"
+                    disabled={loading}
+                    className="bg-[#2a85c7] text-white px-10 py-2.5 rounded-xl hover:bg-[#1582d0] transition-all shadow-lg disabled:opacity-60"
                   >
-                    Reset Password
+                    {loading ? "Resetting..." : "Reset Password"}
                   </button>
                 </div>
               </form>
 
-              {/* RESEND OTP */}
               <div className="text-center pt-4">
                 <button
                   onClick={handleResendOtp}
