@@ -13,7 +13,7 @@ export default function AddTask() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
+    <div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
 
       {/* Sidebar */}
       <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
@@ -33,7 +33,7 @@ export default function AddTask() {
       )}
 
       {/* Main */}
-      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
+      <main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
 
         {/* Header */}
         <div className="mb-6">
@@ -47,7 +47,7 @@ export default function AddTask() {
 
             <div className="flex-1">
               <h1 className="text-xl font-semibold">Add Task</h1>
-              <p className="text-sm text-[var(--color-text-muted)]">
+              <p className="text-sm text-text-muted">
                 Create a task and find someone to help you
               </p>
             </div>
@@ -56,7 +56,7 @@ export default function AddTask() {
               <div className="hidden md:block">
                 <SearchInput />
               </div>
-              <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)]" />
+              <FiBell className="text-xl cursor-pointer text-text-muted" />
             </div>
           </div>
 
@@ -71,9 +71,9 @@ export default function AddTask() {
             className="
               w-full
               max-w-3xl
-              bg-[var(--color-bg-card)]
-              rounded-[var(--radius-card)]
-              shadow-[var(--shadow-card)]
+              bg-(--color-bg-card)
+              rounded-card
+              shadow-(--shadow-card)
               p-8
             "
           >
@@ -121,8 +121,8 @@ export default function AddTask() {
                 <Field label="Task Image">
                   <label className="input flex items-center justify-center h-11 cursor-pointer">
                     <div className="flex items-center gap-2 whitespace-nowrap">
-                      <FiUpload className="shrink-0 text-[var(--color-text-muted)]" size={18} />
-                      <span className="text-[var(--color-text-main)]">Upload Image</span>
+                      <FiUpload className="shrink-0 text-text-muted" size={18} />
+                      <span className="text-text-main">Upload Image</span>
                     </div>
                     <input type="file" hidden />
                   </label>
@@ -132,7 +132,7 @@ export default function AddTask() {
               <div className="flex justify-end pt-4">
                 <button
                   type="submit"
-                  className="bg-[var(--color-primary)] text-white px-6 py-2 rounded-xl hover:bg-[var(--color-primary-hover)] transition-all shadow-lg"
+                  className="bg-(--color-primary) text-white px-6 py-2 rounded-xl hover:bg-(--color-primary-hover) transition-all shadow-lg"
                 >
                   Add Task
                 </button>
@@ -170,7 +170,7 @@ function IconInput({ icon, type }) {
   return (
     <div className="relative">
       <input type={type} className="input pr-10" />
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]">
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">
         {icon}
       </div>
     </div>

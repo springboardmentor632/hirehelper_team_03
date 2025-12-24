@@ -61,7 +61,7 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         {/* Form card */}
         <div className="block md:hidden w-full text-center mb-4">
-          <h1 className="text-lg sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-(--color-primary) tracking-tight">
             Hire-A Helper
           </h1>
         </div>

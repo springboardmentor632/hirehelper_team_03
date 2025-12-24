@@ -133,7 +133,7 @@ export default function App() {
       <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         {/* Form card */}
         <div className="block md:hidden w-full text-center mb-4">
-          <h1 className="text-lg sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-(--color-primary) tracking-tight">
             Hire-A Helper
           </h1>
         </div>
@@ -310,9 +310,9 @@ export default function App() {
                 aria-hidden="true"
               />
 
-              <div className="relative bg-white text-[var(--color-text-main)] rounded-2xl shadow-lg p-6 w-full max-w-2xl z-10">
+              <div className="relative bg-white text-text-main rounded-2xl shadow-lg p-6 w-full max-w-2xl z-10">
                 <h3 className="text-2xl font-semibold text-center mb-4">Terms &amp; Conditions</h3>
-                <div className="text-sm text-[var(--color-text-muted)] space-y-3 mb-6 max-h-64 overflow-auto">
+                <div className="text-sm text-text-muted space-y-3 mb-6 max-h-64 overflow-auto">
                   <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                   </p>
@@ -327,7 +327,7 @@ export default function App() {
                 <div className="flex justify-end gap-3">
                   <button
                     onClick={closeTerms}
-                    className="px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded"
+                    className="px-4 py-2 bg-(--color-primary) hover:bg-(--color-primary-hover) text-white rounded"
                   >
                     Close
                   </button>
