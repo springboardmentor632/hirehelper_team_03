@@ -7,6 +7,7 @@ import AddTask from "./pages/AddTask";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
@@ -45,8 +46,8 @@ function App() {
         }
       />
 
-      {/* Fallback */}
-      <Route path="*" element={<Login />} />
+      {/* 🚨 Undefined routes → Error Page */}
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }
