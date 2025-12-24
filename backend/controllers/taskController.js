@@ -34,15 +34,24 @@ export const createTask = async (req, res) => {
 
 export const getAllTasks = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalTasks = await Task.countDocuments({ user_id: req.user.id });
+
     const tasks = await Task.find({ user_id: req.user.id })
-      .sort({ start_time: 1 });
-    if (tasks.length === 0) {
-      return res.status(200).json({
-        message: "No task found",
-        tasks: []
-      });
-    }
-    return res.status(200).json({ tasks });
+      .sort({ start_time: 1 })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      message: tasks.length ? "Tasks fetched successfully" : "No task found",
+      currentPage: page,
+      totalPages: Math.ceil(totalTasks / limit),
+      totalTasks,
+      tasks
+    });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
