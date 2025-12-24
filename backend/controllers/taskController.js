@@ -100,7 +100,6 @@ export const getTaskFeed = async (req, res) => {
   }
 }
 
-
 export const updateTask = async (req, res) => {
   try {
     const updates = req.body;
