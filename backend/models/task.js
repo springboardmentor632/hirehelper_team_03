@@ -34,4 +34,9 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+taskSchema.index({
+  title: "text",
+  description: "text"
+});
+
 export default mongoose.model("Task", taskSchema);

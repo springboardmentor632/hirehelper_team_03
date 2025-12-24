@@ -138,3 +138,73 @@ export const deleteTask = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+export const searchFeedTasks = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    const DEFAULT_LIMIT = 50;
+    const MAX_LIMIT = 100;
+
+    const page = Math.max(1, Number(req.query.page) || 1);
+    let limit = Number(req.query.limit) || DEFAULT_LIMIT;
+    limit = Math.min(limit, MAX_LIMIT);
+
+    const skip = (page - 1) * limit;
+
+    const tasks = await Task.find(
+      {
+        $text: { $search: query },
+        user_id: { $ne: req.user.id }
+      },
+      { score: { $meta: "textScore" } }
+    )
+      .sort({ score: { $meta: "textScore" } })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({ tasks });
+
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const searchMyTasks = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    const DEFAULT_LIMIT = 50;
+    const MAX_LIMIT = 100;
+
+    const page = Math.max(1, Number(req.query.page) || 1);
+    let limit = Number(req.query.limit) || DEFAULT_LIMIT;
+    limit = Math.min(limit, MAX_LIMIT);
+
+    const skip = (page - 1) * limit;
+
+    const tasks = await Task.find(
+      {
+        $text: { $search: query },
+        user_id: req.user.id
+      },
+      { score: { $meta: "textScore" } }
+    )
+      .sort({ score: { $meta: "textScore" } })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({ tasks });
+
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
