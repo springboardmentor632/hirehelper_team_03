@@ -13,10 +13,10 @@ export default function AddTask() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex">
+    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
 
       {/* Sidebar */}
-      <div className="hidden md:block">
+      <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
         <Sidebar />
       </div>
 
@@ -33,7 +33,7 @@ export default function AddTask() {
       )}
 
       {/* Main */}
-      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)]">
+      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
 
         {/* Header */}
         <div className="mb-6">
@@ -119,12 +119,23 @@ export default function AddTask() {
                 </Field>
 
                 <Field label="Task Image">
-                  <label className="input flex items-center justify-center gap-2 cursor-pointer">
-                    <FiUpload />
-                    Upload Image
+                  <label className="input flex items-center justify-center h-11 cursor-pointer">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                      <FiUpload className="shrink-0 text-[var(--color-text-muted)]" size={18} />
+                      <span className="text-[var(--color-text-main)]">Upload Image</span>
+                    </div>
                     <input type="file" hidden />
                   </label>
                 </Field>
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <button
+                  type="submit"
+                  className="bg-[var(--color-primary)] text-white px-6 py-2 rounded-xl hover:bg-[var(--color-primary-hover)] transition-all shadow-lg"
+                >
+                  Add Task
+                </button>
               </div>
 
             </form>

@@ -10,10 +10,10 @@ export default function Feed() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen w-full bg-(--color-bg-app) flex">
+    <div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
 
       {/* ================= Desktop Sidebar ================= */}
-      <div className="hidden md:block">
+      <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
         <Sidebar />
       </div>
 
@@ -32,7 +32,7 @@ export default function Feed() {
       )}
 
       {/* ================= Main Content ================= */}
-      <main className="flex-1 p-4 md:p-6 text-left text-text-main">
+      <main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
 
         {/* ================= Header ================= */}
         <div className="mb-6">

@@ -30,8 +30,14 @@ export default function Login() {
         }
       );
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // Persist auth based on "Remember me"
+      if (rememberMe) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      } else {
+        sessionStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("user", JSON.stringify(res.data.user));
+      }
 
       navigate("/", { replace: true });
     } catch (err) {
@@ -54,6 +60,12 @@ export default function Login() {
       {/* Main container - Responsive for all sizes */}
       <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         {/* Form card */}
+        <div className="block md:hidden w-full text-center mb-4">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight">
+            Hire-A Helper
+          </h1>
+        </div>
+
         <div className="bg-[rgba(101,174,233,0.3)] backdrop-blur-sm rounded-4xl sm:rounded-[45px] md:rounded-[55px] xl:rounded-[65px] p-4 sm:p-6 md:p-6 xl:p-8 shadow-xl">
           <h2 className="text-[28px] sm:text-[32px] md:text-[36px] lg:text-[42px] xl:text-[48px] font-black text-[rgba(21,130,208,0.93)] mb-4 sm:mb-5 md:mb-6 lg:mb-7 xl:mb-8 text-center">
             LOGIN
@@ -112,7 +124,7 @@ export default function Login() {
             )}
 
             {/* Remember me & Forgot password */}
-            <div className="flex justify-between items-center text-[11px] sm:text-[12px] text-[#2a85c7] pt-1">
+            <div className="flex justify-between items-center text-[11px] sm:text-[15px] text-[#2a85c7] pt-1">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -135,9 +147,8 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#2a85c7] text-white px-8 sm:px-10 xl:px-12 py-2.5 sm:py-2.5 xl:py-3 rounded-xl hover:bg-[#1582d0] active:scale-95 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+                className="bg-[#2a85c7] text-white px-8 sm:px-10 xl:px-12 py-2.5 sm:py-2.5 xl:py-3 rounded-xl hover:bg-[#1582d0] active:scale-95 transition-all flex justify-center shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <FaUser size={14} />
                 <span className="text-sm sm:text-base">
                   {loading ? "Logging in..." : "Login"}
                 </span>

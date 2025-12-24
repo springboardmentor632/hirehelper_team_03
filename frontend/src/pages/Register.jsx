@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios"; //  API calls
 import { useNavigate } from "react-router-dom"; // Navigation
 import {
@@ -32,6 +32,19 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  // Terms modal state
+  const [showTerms, setShowTerms] = useState(false);
+  const openTerms = () => setShowTerms(true);
+  const closeTerms = () => setShowTerms(false);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setShowTerms(false);
+    };
+    if (showTerms) document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [showTerms]);
 
   const handleChange = (e) => {
     setFormData({
@@ -119,6 +132,12 @@ export default function App() {
       {/* Main container - Responsive for all sizes */}
       <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         {/* Form card */}
+        <div className="block md:hidden w-full text-center mb-4">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight">
+            Hire-A Helper
+          </h1>
+        </div>
+
         <div className="bg-[rgba(101,174,233,0.3)] backdrop-blur-sm rounded-4xl sm:rounded-[45px] md:rounded-[55px] xl:rounded-[65px] p-4 sm:p-6 md:p-6 xl:p-8 shadow-xl">
           <h2 className="text-[28px] sm:text-[32px] md:text-[36px] lg:text-[42px] xl:text-[48px] font-black text-[rgba(21,130,208,0.93)] mb-4 sm:mb-5 md:mb-6 lg:mb-7 xl:mb-8 text-center">
             REGISTER
@@ -243,9 +262,15 @@ export default function App() {
             </div>
 
             {/* Terms and conditions */}
-            <p className="text-[11px] sm:text-[12px] text-[#2a85c7] italic text-center sm:text-left pt-1">
+            <p className="text-[11px] sm:text-[14px] text-[#2a85c7] italic text-center sm:text-left pt-1">
               By signing up, You agree to our{" "}
-              <span className="underline cursor-pointer hover:text-[#1582d0] transition-colors">
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={openTerms}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " " ? openTerms() : null)}
+                className="underline cursor-pointer hover:text-[#1582d0] transition-colors"
+              >
                 Terms & Conditions
               </span>
             </p>
@@ -254,9 +279,8 @@ export default function App() {
             <div className="flex justify-center pt-2 sm:pt-3 xl:pt-4">
               <button
                 type="submit"
-                className="bg-[#2a85c7] text-white px-8 sm:px-10 xl:px-12 py-2.5 sm:py-2.5 xl:py-3 rounded-xl hover:bg-[#1582d0] active:scale-95 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl"
+                className="bg-[#2a85c7] text-white px-8 sm:px-10 xl:px-12 py-2.5 sm:py-2.5 xl:py-3 rounded-xl hover:bg-[#1582d0] active:scale-95 transition-all flex justify-center shadow-lg hover:shadow-xl"
               >
-                <FaUser size={14} />
                 <span className="text-sm sm:text-base">Sign Up</span>
               </button>
             </div>
@@ -272,6 +296,46 @@ export default function App() {
             </p>
           </div>
           </form>
+
+          {showTerms && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Terms and conditions"
+              className="fixed inset-0 z-50 flex items-center justify-center"
+            >
+              <div
+                className="absolute inset-0 bg-transparent"
+                onClick={closeTerms}
+                aria-hidden="true"
+              />
+
+              <div className="relative bg-white text-[var(--color-text-main)] rounded-2xl shadow-lg p-6 w-full max-w-2xl z-10">
+                <h3 className="text-2xl font-semibold text-center mb-4">Terms &amp; Conditions</h3>
+                <div className="text-sm text-[var(--color-text-muted)] space-y-3 mb-6 max-h-64 overflow-auto">
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                  <p>
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </p>
+                  <p>
+                    Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={closeTerms}
+                    className="px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
