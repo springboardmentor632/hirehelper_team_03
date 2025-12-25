@@ -12,10 +12,16 @@ const taskSchema = new mongoose.Schema(
       required: true,
       maxlength: 255,
     },
-    description: String,
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     location: {
       type: String,
+      required: true,
       maxlength: 255,
+      trim: true,
     },
     start_time: {
       type: Date,
@@ -28,7 +34,7 @@ const taskSchema = new mongoose.Schema(
       default: "pending",
     },
     picture: {
-      type: String, 
+      type: String,
     },
   },
   { timestamps: true }
@@ -36,7 +42,8 @@ const taskSchema = new mongoose.Schema(
 
 taskSchema.index({
   title: "text",
-  description: "text"
+  description: "text",
+  location: "text",
 });
 
 export default mongoose.model("Task", taskSchema);

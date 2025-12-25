@@ -3,28 +3,45 @@ import { uploadTaskToCloudinary } from "../middleware/uploadTask.js";
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, location, start_time, end_time } = req.body;
-    if (!title || !description || !location || !start_time) {
+    const {
+      title,
+      description,
+      location,
+      category,
+      start_date,
+      start_time,
+      end_date,
+      end_time,
+    } = req.body;
+
+    if (!title || !description || !location || !category || !start_date || !start_time) {
       return res.status(400).json({
-        message: "All required fields must be provided"
+        message: "All required fields must be provided",
       });
     }
+    const startDateTime = new Date(`${start_date}T${start_time}`);
+    const endDateTime =
+      end_date && end_time ? new Date(`${end_date}T${end_time}`) : null;
+
     const data = {
       user_id: req.user.id,
       title,
       description,
       location,
-      start_time: new Date(start_time),
-      end_time: end_time ? new Date(end_time) : null,
+      category,
+      start_time: startDateTime,
+      end_time: endDateTime,
     };
     if (req.file) {
       const result = await uploadTaskToCloudinary(req.file.buffer);
       data.picture = result.secure_url;
     }
+
     const task = await Task.create(data);
+
     return res.status(201).json({
       message: "Task created successfully",
-      task
+      task,
     });
 
   } catch (error) {
