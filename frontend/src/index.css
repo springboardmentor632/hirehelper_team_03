@@ -92,6 +92,26 @@ body {
   background: var(--color-app);
   font-size: 14px;
   color: var(--color-text-main);
+  /* center single-line placeholder and text vertically */
+  line-height: 44px;
+  display: block;
+}
+
+/* Textareas are multi-line; keep a comfortable height and keep content top-aligned */
+textarea.input {
+  height: 120px;
+  padding: 12px;
+  line-height: 1.4rem;
+  resize: none;
+} 
+
+/* Make selects and date/time inputs keep the single-line visual */
+select.input,
+input[type="date"].input,
+input[type="time"].input {
+  height: 44px;
+  line-height: 44px;
+  padding: 0 12px;
 }
 
 /* ================================
