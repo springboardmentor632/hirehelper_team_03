@@ -13,7 +13,8 @@ export const sendRequest = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
-    if (task.createdBy === req.user.id) {
+
+    if (task.user_id === req.user.id) {
       return res.status(400).json({ message: "Cannot request your own task" });
     }
     const existingRequest = await Request.findOne({
@@ -26,14 +27,15 @@ export const sendRequest = async (req, res) => {
     const request = await Request.create({
       task: taskId,
       requester: req.user.id,
-      taskOwner: task.createdBy
+      taskOwner: task.user_id
     });
     res.status(201).json({
       message: "Task request sent successfully",
       request
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Send Request Error:", error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -43,15 +45,14 @@ export const getReceivedRequests = async (req, res) => {
       taskOwner: req.user.id
     })
       .populate("task")
-      .populate("requester", "first_name last_name email_id")
       .sort({ createdAt: -1 });
 
-    res.status(200).json(requests);
+    return res.status(200).json(requests);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Get Received Requests Error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
-
 
 export const getSentRequests = async (req, res) => {
   try {
@@ -59,12 +60,11 @@ export const getSentRequests = async (req, res) => {
       requester: req.user.id
     })
       .populate("task")
-      .populate("taskOwner", "first_name last_name email_id")
       .sort({ createdAt: -1 });
 
-    res.status(200).json(requests);
+    return res.status(200).json(requests);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -80,15 +80,18 @@ export const acceptRequest = async (req, res) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
+    if (request.status !== "pending") {
+      return res.status(400).json({ message: "Request already processed" });
+    }
+
     request.status = "accepted";
     await request.save();
 
     res.status(200).json({ message: "Request accepted" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
-
 
 export const rejectRequest = async (req, res) => {
   try {
@@ -102,11 +105,16 @@ export const rejectRequest = async (req, res) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
+    if (request.status !== "pending") {
+      return res.status(400).json({ message: "Request already processed" });
+    }
+
     request.status = "rejected";
     await request.save();
 
-    res.status(200).json({ message: "Request rejected" });
+    return res.status(200).json({ message: "Request rejected" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
+
