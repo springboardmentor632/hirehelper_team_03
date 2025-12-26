@@ -8,12 +8,12 @@ const requestSchema = new mongoose.Schema(
       required: true
     },
     requester: {
-      type: String, // UUID from User schema
+      type: String, 
       ref: "User",
       required: true
     },
     taskOwner: {
-      type: String, // UUID from User schema
+      type: String, 
       ref: "User",
       required: true
     },

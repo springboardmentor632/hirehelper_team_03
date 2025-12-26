@@ -13,42 +13,30 @@ export const sendRequest = async (req, res) => {
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
-
-    // Prevent sending request to own task
     if (task.createdBy === req.user.id) {
       return res.status(400).json({ message: "Cannot request your own task" });
     }
-
-    // Prevent duplicate request
     const existingRequest = await Request.findOne({
       task: taskId,
       requester: req.user.id
     });
-
     if (existingRequest) {
       return res.status(400).json({ message: "Request already sent" });
     }
-
     const request = await Request.create({
       task: taskId,
       requester: req.user.id,
       taskOwner: task.createdBy
     });
-
     res.status(201).json({
       message: "Task request sent successfully",
       request
     });
-
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-/* --------------------------------------------------
-   GET /api/requests/received
-   View requests received on my tasks
--------------------------------------------------- */
 export const getReceivedRequests = async (req, res) => {
   try {
     const requests = await Request.find({
@@ -64,10 +52,7 @@ export const getReceivedRequests = async (req, res) => {
   }
 };
 
-/* --------------------------------------------------
-   GET /api/requests/sent
-   View requests sent by me
--------------------------------------------------- */
+
 export const getSentRequests = async (req, res) => {
   try {
     const requests = await Request.find({
@@ -83,10 +68,6 @@ export const getSentRequests = async (req, res) => {
   }
 };
 
-/* --------------------------------------------------
-   PUT /api/requests/:id/accept
-   Accept task request
--------------------------------------------------- */
 export const acceptRequest = async (req, res) => {
   try {
     const request = await Request.findById(req.params.id);
@@ -108,10 +89,7 @@ export const acceptRequest = async (req, res) => {
   }
 };
 
-/* --------------------------------------------------
-   PUT /api/requests/:id/reject
-   Reject task request
--------------------------------------------------- */
+
 export const rejectRequest = async (req, res) => {
   try {
     const request = await Request.findById(req.params.id);
