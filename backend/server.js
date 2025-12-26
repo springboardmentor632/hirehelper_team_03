@@ -4,6 +4,7 @@ import cors from 'cors';
 import {connectDB} from './config/database.js';
 import authRoutes from './routes/userRoute.js';
 import taskRoutes from './routes/taskRoute.js';
+import requestRoutes from "./routes/requestRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
@@ -20,6 +21,7 @@ app.get('/',(req,res)=>{
 
 app.use('/api', authRoutes); 
 app.use('/api/tasks', taskRoutes);
+app.use("/api/requests", requestRoutes);
 
 app.listen(PORT,()=>{
     console.log(`Server is running at http://localhost:${PORT}`);
