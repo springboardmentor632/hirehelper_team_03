@@ -114,6 +114,27 @@ input[type="time"].input {
   padding: 0 12px;
 }
 
+/* Hide native calendar/clock icons (keep native pickers on focus) */
+input[type="date"].input,
+input[type="time"].input {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+/* WebKit pseudo-elements used for the picker icon */
+input[type="date"].input::-webkit-calendar-picker-indicator,
+input[type="time"].input::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* IE/Edge older: remove default expand/clear buttons */
+input::-ms-clear,
+input::-ms-expand {
+  display: none;
+}
+
 /* ================================
    Optional Global Enhancements
 ================================ */

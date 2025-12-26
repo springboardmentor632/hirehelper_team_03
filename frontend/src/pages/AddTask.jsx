@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { FiMenu, FiBell, FiUpload, FiCalendar, FiClock } from "react-icons/fi";
@@ -262,15 +262,48 @@ function Textarea(props) {
 }
 
 function IconInput({ icon, type, value, onChange }) {
+  const inputRef = useRef(null);
+
+  const handleIconClick = () => {
+    const el = inputRef.current;
+    if (!el) return;
+    // Modern browsers expose showPicker() for date/time inputs
+    if (typeof el.showPicker === "function") {
+      try {
+        el.showPicker();
+        return;
+      } catch (e) {
+        // ignore and fallback
+      }
+    }
+    // Fallback: focus and dispatch click to trigger native picker where supported
+    el.focus();
+    try {
+      el.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    } catch (e) {
+      // noop
+    }
+  };
+
   return (
     <div className="relative">
       <input
+        ref={inputRef}
         type={type}
         className="input pr-10"
         value={value}
         onChange={onChange}
       />
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]">
+      <div
+        onClick={handleIconClick}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] cursor-pointer select-none"
+        role="button"
+        aria-label={type === "date" ? "Open date picker" : "Open time picker"}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleIconClick();
+        }}
+      >
         {icon}
       </div>
     </div>
