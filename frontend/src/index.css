@@ -1,49 +1,174 @@
+/* ================================
+   Tailwind Import
+================================ */
 @import "tailwindcss";
 
+/* Custom theme for your OTP */
 @theme {
-  /* --- 1. COLORS --- */
-  
-  /* Brand Colors */
-  /* Usage: bg-primary, text-primary */
-  --color-primary: #5FA4E6;
-  --color-primary-hover: #4A8AC4;
-  
-  /* Backgrounds */
-  /* Usage: bg-app, bg-card */
-  --color-app: #DBE6EA;      /* Renamed from bg-app to just 'app' for cleaner class name */
-  --color-card: #FFFFFF;
-  
-  /* Actions */
-  /* Usage: bg-success, text-danger */
-  --color-success: #10B949;
-  --color-danger: #E81C1C;
-  
-  /* Text */
-  /* Usage: text-main, text-muted */
-  --color-text-main: #1F2937;
-  --color-text-muted: #6B7280;
+  --color-screen: #dbe6ea;
+  --color-card: #b1deff;
+  --color-button: #5fa4e6;
+  --color-button-hover: #4a8ac4;
+  --color-text-primary: #5fa4e6;
+  --color-otp-box: #7bc6ff;
+  --color-borderbox: #a4d8ff;
 
-  /* --- 2. FONTS --- */
-  /* Usage: font-sans */
-  --font-sans: 'Inter', system-ui, sans-serif;
-
-  /* --- 3. BORDER RADIUS --- */
-  /* Usage: rounded-card, rounded-btn */
   --radius-card: 20px;
+  --radius-button: 10px;
+  --radius-otp: 4px;
+
+  /* Brand */
+  --color-primary: #5fa4e6;
+  --color-primary-hover: #4a8ac4;
+
+  /* Backgrounds */
+  --color-app: #dbe6ea;
+
+  /* Actions */
+  --color-success: #10b949;
+  --color-danger: #e81c1c;
+
+  /* Text */
+  --color-text-main: #1f2937;
+  --color-text-muted: #6b7280;
+
+  /* -------- TYPOGRAPHY -------- */
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* -------- SHAPE -------- */
+
   --radius-btn: 8px;
 
-  /* --- 4. SHADOWS --- */
-  /* Usage: shadow-card */
-  --shadow-card: 0 4px 15px rgba(0,0,0,0.05);
+  /* -------- SHADOWS -------- */
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* --- GLOBAL STYLES --- */
-/* These go OUTSIDE the @theme block */
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 
+.animate-slide-in {
+  animation: slide-in 0.25s ease-out forwards;
+}
+
+/* ================================
+   Theme Tokens (Design System)
+   Used via Tailwind arbitrary values
+================================ */
+
+/* ================================
+   Global Reset & Fullscreen Fix
+================================ */
+
+/* Ensure FULL SCREEN layout */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base body styles */
 body {
   background-color: var(--color-app);
   font-family: var(--font-sans);
   color: var(--color-text-main);
-  margin: 0;
-  /* Removed 'display: flex' and 'place-items: center' so your dashboard isn't centered like a button */
+  overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--color-text-muted);
+  background: var(--color-app);
+  font-size: 14px;
+  color: var(--color-text-main);
+  /* center single-line placeholder and text vertically */
+  line-height: 44px;
+  display: block;
+}
+
+/* Textareas are multi-line; keep a comfortable height and keep content top-aligned */
+textarea.input {
+  height: 120px;
+  padding: 12px;
+  line-height: 1.4rem;
+  resize: none;
+} 
+
+/* Make selects and date/time inputs keep the single-line visual */
+select.input,
+input[type="date"].input,
+input[type="time"].input {
+  height: 44px;
+  line-height: 44px;
+  padding: 0 12px;
+}
+
+/* Hide native calendar/clock icons (keep native pickers on focus) */
+input[type="date"].input,
+input[type="time"].input {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+/* WebKit pseudo-elements used for the picker icon */
+input[type="date"].input::-webkit-calendar-picker-indicator,
+input[type="time"].input::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* IE/Edge older: remove default expand/clear buttons */
+input::-ms-clear,
+input::-ms-expand {
+  display: none;
+}
+
+/* ================================
+   Optional Global Enhancements
+================================ */
+
+/* Smooth fonts */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Buttons default fix */
+button {
+  font-family: inherit;
+}
+
+/* Inputs default fix */
+input {
+  outline: none;
+  font-family: inherit;
+}
+
+/* ================================
+   Scrollbar (Optional, looks premium)
+================================ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }

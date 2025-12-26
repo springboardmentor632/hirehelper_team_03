@@ -1,0 +1,99 @@
+import { useState } from "react";
+import Sidebar from "../components/Sidebar";
+import MyTaskCard from "../components/MyTaskCard";
+import { FiMenu, FiSearch, FiBell } from "react-icons/fi";
+import SearchInput from "../components/SearchInput";
+
+export default function MyTasks() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
+
+      {/* ================= Desktop Sidebar ================= */}
+      <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
+        <Sidebar />
+      </div>
+
+      {/* ================= Mobile Sidebar ================= */}
+      {sidebarOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/40 z-40"
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          {/* Slide-in Sidebar */}
+          <div className="fixed inset-y-0 left-0 z-50 animate-slide-in">
+            <Sidebar onClose={() => setSidebarOpen(false)} />
+          </div>
+        </>
+      )}
+
+      {/* ================= Main Content ================= */}
+      <main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
+
+        {/* ================= Header ================= */}
+        <div className="mb-6">
+
+          {/* Top Row */}
+          <div className="flex items-center justify-left gap-4">
+
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden text-2xl text-text-main"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <FiMenu />
+            </button>
+
+            {/* Title */}
+            <div className="flex-1">
+              <h1 className="text-xl font-semibold">My Tasks</h1>
+              <p className="text-sm text-text-muted">
+                Manage your posted tasks
+              </p>
+            </div>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-4">
+
+              {/* Desktop Search */}
+              <div className="hidden md:block">
+                <SearchInput />
+              </div>
+
+
+              {/* Notification Bell (VISIBLE ON ALL SCREENS) */}
+              <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
+            </div>
+          </div>
+
+          {/* Mobile Search */}
+          <div className="md:hidden mt-4">
+            <SearchInput fullWidth />
+          </div>
+
+        </div>
+
+        {/* ================= Cards Grid ================= */}
+        <div
+          className="
+            grid
+            grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-3
+            xl:grid-cols-4
+            gap-6
+          "
+        >
+          <MyTaskCard />
+          <MyTaskCard />
+          <MyTaskCard />
+        </div>
+
+      </main>
+    </div>
+  );
+}
