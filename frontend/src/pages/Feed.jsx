@@ -1,78 +1,189 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TaskCard from "../components/TaskCard";
-import { FiMenu, FiBell } from "react-icons/fi";
+import { FiMenu, FiBell, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
-
+ 
 export default function Feed() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchLoading, setSearchLoading] = useState(false);
   const navigate = useNavigate();
-
+ 
+  // Fetch feed tasks (everyone else's tasks via /api/tasks/feed)
+  const fetchFeedTasks = async (page = 1) => {
+    try {
+      setLoading(true);
+      setError("");
+      const res = await axios.get(`http://localhost:5000/api/tasks/feed?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      // Backend returns { tasks, pagination: { totalTasks, totalPages, currentPage } }
+      setTasks(res.data.tasks || []);
+    } catch (err) {
+      console.error("Error fetching feed:", err);
+      setError(
+        err.response?.data?.message || "Failed to load feed. Please log in and try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+ 
+  // Search feed tasks using /api/tasks/search
+  const searchFeedTasks = async (query) => {
+    if (!query || !query.trim()) {
+      // Empty search → reload full feed
+      fetchFeedTasks();
+      return;
+    }
+    try {
+      setSearchLoading(true);
+      setError("");
+      const res = await axios.get(
+        `http://localhost:5000/api/tasks/search?query=${encodeURIComponent(
+          query.trim()
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // Backend searchFeedTasks returns array of tasks directly
+      setTasks(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error searching feed:", err);
+      setError(
+        err.response?.data?.message || "Failed to search tasks. Please try again."
+      );
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+ 
+  useEffect(() => {
+    fetchFeedTasks();
+  }, []);
+ 
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+ 
+  const handleSearchSubmit = (e) => {
+    e?.preventDefault?.();
+    searchFeedTasks(searchTerm);
+  };
+ 
   return (
-    <div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
-
-      {/* ================= Desktop Sidebar ================= */}
+    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
+      {/* Desktop Sidebar */}
       <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
         <Sidebar />
       </div>
-
-      {/* ================= Mobile Sidebar ================= */}
+ 
+      {/* Mobile Sidebar overlay */}
       {sidebarOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/40 z-40"
-            onClick={() => setSidebarOpen(false)}
-          />
-
-          <div className="fixed inset-y-0 left-0 z-50 animate-slide-in">
-            <Sidebar onClose={() => setSidebarOpen(false)} />
-          </div>
-        </>
+        <div
+          className="fixed inset-0 bg-black/40 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
-
-      {/* ================= Main Content ================= */}
-      <main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
-
-        {/* ================= Header ================= */}
+ 
+      {/* Mobile Sidebar slide-in */}
+      {sidebarOpen && (
+        <div className="fixed inset-y-0 left-0 z-50 animate-slide-in">
+          <Sidebar onClose={() => setSidebarOpen(false)} />
+        </div>
+      )}
+ 
+      {/* Main Content */}
+      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
+        {/* Header */}
         <div className="mb-6">
+          {/* Top Row */}
           <div className="flex items-center justify-between gap-4">
-
+            {/* Mobile Hamburger */}
             <button
-              className="md:hidden text-2xl"
+              className="md:hidden text-2xl text-[var(--color-text-main)]"
               onClick={() => setSidebarOpen(true)}
             >
               <FiMenu />
             </button>
-
+ 
+            {/* Title */}
             <div className="flex-1">
               <h1 className="text-xl font-semibold">Feed</h1>
-              <p className="text-sm text-text-muted">
+              <p className="text-sm text-[var(--color-text-muted)]">
                 Find tasks that need help
               </p>
             </div>
-
+ 
+            {/* Right Actions */}
             <div className="flex items-center gap-4">
+              {/* Desktop Search */}
               <div className="hidden md:block">
-                <SearchInput />
+                <form onSubmit={handleSearchSubmit}>
+                  <SearchInput
+                    placeholder="Search tasks..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    icon={<FiSearch />}
+                  />
+                </form>
               </div>
-
-              <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
+ 
+              {/* Notification Bell */}
+              <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]" />
             </div>
           </div>
-
+ 
+          {/* Mobile Search */}
           <div className="md:hidden mt-4">
-            <SearchInput fullWidth />
+            <form onSubmit={handleSearchSubmit}>
+              <SearchInput
+                placeholder="Search tasks..."
+                value={searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                fullWidth
+                icon={<FiSearch />}
+              />
+            </form>
           </div>
         </div>
-
-        {/* ================= Cards Grid ================= */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
-          <TaskCard />
-        </div>
+ 
+        {/* Content: loading / error / grid */}
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <p className="text-[var(--color-text-muted)]">Loading feed...</p>
+          </div>
+        ) : error ? (
+          <div className="flex justify-center items-center h-40">
+            <p className="text-red-500 text-sm">{error}</p>
+          </div>
+        ) : tasks.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-40 text-center">
+            <p className="text-[var(--color-text-muted)] mb-2">
+              No tasks available.
+            </p>
+            <p className="text-xs text-[var(--color-text-muted)]">
+              Check back later or create your own task.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {tasks.map((task) => (
+              <TaskCard key={task._id} task={task} />
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
