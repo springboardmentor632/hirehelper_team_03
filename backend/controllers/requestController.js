@@ -1,5 +1,5 @@
 import Request from "../models/requestModel.js";
-import Task from "../models/taskModel.js";
+import Task from "../models/task.js";
 
 export const sendRequest = async (req, res) => {
   try {

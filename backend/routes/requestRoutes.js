@@ -6,7 +6,7 @@ import {
   acceptRequest,
   rejectRequest
 } from "../controllers/requestController.js";
-import { protect } from "../middleware/auth.js";
+import  protect  from "../middleware/auth.js";
 
 const router = express.Router();
 
