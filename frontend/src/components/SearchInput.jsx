@@ -1,6 +1,11 @@
 import { FiSearch } from "react-icons/fi";
-
-export default function SearchInput({ fullWidth = false }) {
+ 
+export default function SearchInput({
+  value = "",
+  onChange = () => {},
+  fullWidth = false,
+  placeholder = "Search tasks..."
+}) {
   return (
     <div className={`relative ${fullWidth ? "w-full" : "w-64 md:w-72"}`}>
       <FiSearch
@@ -14,7 +19,9 @@ export default function SearchInput({ fullWidth = false }) {
       />
       <input
         type="text"
-        placeholder="Search tasks..."
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
         className="
           w-full
           pl-11
