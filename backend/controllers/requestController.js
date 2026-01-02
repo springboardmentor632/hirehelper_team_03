@@ -45,9 +45,10 @@ export const getReceivedRequests = async (req, res) => {
       taskOwner: req.user.id
     })
       .populate("task")
+      .populate("requester", "first_name last_name")
       .sort({ createdAt: -1 });
 
-    return res.status(200).json(requests);
+    return res.status(200).json({ requests });
   } catch (error) {
     console.error("Get Received Requests Error:", error);
     return res.status(500).json({ message: "Server error" });
@@ -60,9 +61,10 @@ export const getSentRequests = async (req, res) => {
       requester: req.user.id
     })
       .populate("task")
+      .populate("taskOwner", "first_name last_name")
       .sort({ createdAt: -1 });
 
-    return res.status(200).json(requests);
+    return res.status(200).json({ requests });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
@@ -76,7 +78,7 @@ export const acceptRequest = async (req, res) => {
       return res.status(404).json({ message: "Request not found" });
     }
 
-    if (request.taskOwner !== req.user.id) {
+    if (request.taskOwner?.toString() !== req.user.id) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -87,7 +89,12 @@ export const acceptRequest = async (req, res) => {
     request.status = "accepted";
     await request.save();
 
-    res.status(200).json({ message: "Request accepted" });
+    const updated = await Request.findById(request._id)
+      .populate("task")
+      .populate("requester", "first_name last_name")
+      .populate("taskOwner", "first_name last_name");
+
+    res.status(200).json({ message: "Request accepted", request: updated });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
@@ -101,7 +108,7 @@ export const rejectRequest = async (req, res) => {
       return res.status(404).json({ message: "Request not found" });
     }
 
-    if (request.taskOwner !== req.user.id) {
+    if (request.taskOwner?.toString() !== req.user.id) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -114,6 +121,31 @@ export const rejectRequest = async (req, res) => {
 
     return res.status(200).json({ message: "Request rejected" });
   } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Delete a request (task owner or requester can delete)
+export const deleteRequest = async (req, res) => {
+  try {
+    // Allow delete if the authenticated user is either the taskOwner or the requester
+    const deleted = await Request.findOneAndDelete({ _id: req.params.id, $or: [{ taskOwner: req.user.id }, { requester: req.user.id }] });
+
+    if (deleted) {
+      console.log(`Deleted request ${req.params.id} by user ${req.user.id}`);
+      return res.status(200).json({ message: "Request deleted", id: req.params.id });
+    }
+
+    const exists = await Request.findById(req.params.id);
+    if (!exists) {
+      console.log(`Delete failed: request ${req.params.id} not found`);
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    console.log(`Delete forbidden: user ${req.user.id} not authorized for request ${req.params.id}`, 'taskOwner:', exists.taskOwner, 'requester:', exists.requester);
+    return res.status(403).json({ message: "Not authorized" });
+  } catch (error) {
+    console.error("Delete Request Error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

@@ -1,6 +1,6 @@
 import { FiMapPin, FiClock, FiUser } from "react-icons/fi";
  
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, onRequestClick }) {
   const {
     title,
     description,
@@ -85,15 +85,8 @@ export default function TaskCard({ task }) {
         </span>
  
         <button
-          className="
-            bg-[var(--color-success)]
-            text-white
-            px-4
-            py-1
-            rounded-[var(--radius-button)]
-            text-sm
-            hover:opacity-90
-          "
+          onClick={onRequestClick}
+          className="bg-blue-500 text-white text-xs px-2 py-1 rounded"
         >
           Request
         </button>

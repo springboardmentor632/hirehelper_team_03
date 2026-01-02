@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import TaskCard from "../components/TaskCard";
 import { FiMenu, FiBell, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
+import RequestPopup from "../components/RequestPopup";
  
 export default function Feed() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -13,6 +14,8 @@ export default function Feed() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null); // 🔹 popup state
+ 
   const navigate = useNavigate();
  
   // Fetch feed tasks (everyone else's tasks via /api/tasks/feed)
@@ -20,17 +23,21 @@ export default function Feed() {
     try {
       setLoading(true);
       setError("");
-      const res = await axios.get(`http://localhost:5000/api/tasks/feed?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await axios.get(
+        `http://localhost:5000/api/tasks/feed?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       // Backend returns { tasks, pagination: { totalTasks, totalPages, currentPage } }
       setTasks(res.data.tasks || []);
     } catch (err) {
       console.error("Error fetching feed:", err);
       setError(
-        err.response?.data?.message || "Failed to load feed. Please log in and try again."
+        err.response?.data?.message ||
+          "Failed to load feed. Please log in and try again."
       );
     } finally {
       setLoading(false);
@@ -62,7 +69,8 @@ export default function Feed() {
     } catch (err) {
       console.error("Error searching feed:", err);
       setError(
-        err.response?.data?.message || "Failed to search tasks. Please try again."
+        err.response?.data?.message ||
+          "Failed to search tasks. Please try again."
       );
     } finally {
       setSearchLoading(false);
@@ -180,11 +188,22 @@ export default function Feed() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {tasks.map((task) => (
-              <TaskCard key={task._id} task={task} />
+              <TaskCard
+                key={task._id}
+                task={task}
+                onRequestClick={() => setSelectedTask(task)} // 🔹 Pass task to popup
+              />
             ))}
           </div>
         )}
       </main>
+      {selectedTask && (
+        <RequestPopup
+          isOpen={!!selectedTask}
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
     </div>
   );
 }
