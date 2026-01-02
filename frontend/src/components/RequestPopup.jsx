@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { getAuthHeader } from "../utils/auth";
  
 export default function RequestPopup({ isOpen, task, onClose }) {
   const [loading, setLoading] = useState(false);
@@ -15,9 +16,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
         "http://localhost:5000/api/requests",
         { taskId: task._id },
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: getAuthHeader(),
         }
       );
  

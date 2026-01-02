@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import MyTaskCard from "../components/MyTaskCard";
 import { FiMenu, FiSearch, FiBell } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
+import { getAuthHeader } from "../utils/auth";
  
 export default function MyTasks() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,11 +19,7 @@ export default function MyTasks() {
     try {
       setLoading(true);
       setError("");
-      const res = await axios.get("http://localhost:5000/api/tasks/my", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await axios.get("http://localhost:5000/api/tasks/my", { headers: getAuthHeader() });
       // backend getAllTasks returns { message, currentPage, totalPages, totalTasks, tasks }
       setTasks(res.data.tasks || []);
     } catch (err) {
@@ -49,11 +46,7 @@ export default function MyTasks() {
         `http://localhost:5000/api/tasks/my/search?query=${encodeURIComponent(
           query.trim()
         )}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+{ headers: getAuthHeader() }
       );
       // backend searchMyTasks returns an array of tasks directly
       setTasks(Array.isArray(res.data) ? res.data : []);

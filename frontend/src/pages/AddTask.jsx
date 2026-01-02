@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
+import { getAuthHeader } from "../utils/auth";
 import { FiMenu, FiBell, FiUpload, FiCalendar, FiClock } from "react-icons/fi";
 
 export default function AddTask() {
@@ -49,11 +50,7 @@ export default function AddTask() {
       const response = await axios.post(
         "http://localhost:5000/api/tasks/my",
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        { headers: getAuthHeader() }
       );
 
       console.log("Task added:", response.data);

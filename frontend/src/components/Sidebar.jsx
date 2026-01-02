@@ -14,8 +14,8 @@ import { useState, useEffect } from "react";
 export default function Sidebar({ onClose }) {
   const navigate = useNavigate();
  
-  // Read user from localStorage (set during login)
-  const storedUser = localStorage.getItem("user");
+  // Read user from localStorage (set during login) or sessionStorage for temporary logins
+  const storedUser = localStorage.getItem("user") || sessionStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
  
   const handleLogout = () => {

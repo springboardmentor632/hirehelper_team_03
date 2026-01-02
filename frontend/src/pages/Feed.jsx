@@ -6,6 +6,7 @@ import TaskCard from "../components/TaskCard";
 import { FiMenu, FiBell, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
 import RequestPopup from "../components/RequestPopup";
+import { getAuthHeader } from "../utils/auth";
  
 export default function Feed() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,11 +26,7 @@ export default function Feed() {
       setError("");
       const res = await axios.get(
         `http://localhost:5000/api/tasks/feed?page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        { headers: getAuthHeader() }
       );
       // Backend returns { tasks, pagination: { totalTasks, totalPages, currentPage } }
       setTasks(res.data.tasks || []);
@@ -58,11 +55,7 @@ export default function Feed() {
         `http://localhost:5000/api/tasks/search?query=${encodeURIComponent(
           query.trim()
         )}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        { headers: getAuthHeader() }
       );
       // Backend searchFeedTasks returns array of tasks directly
       setTasks(Array.isArray(res.data) ? res.data : []);
