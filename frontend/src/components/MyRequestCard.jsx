@@ -31,11 +31,11 @@ export default function MyRequestCard({ request, onWithdraw }) {
             Sent To: {ownerName}
 </h2>
  
-          <p className="text-xs text-[var(--color-text-muted)] mt-1">
+          <p className="text-xs text-text-muted mt-1">
             Status: {request.status}
 </p>
  
-          <p className="text-sm text-[var(--color-text-main)] mt-2 line-clamp-3">
+          <p className="text-sm text-text-main mt-2 line-clamp-3">
             You requested help for this task.
 </p>
 </div>
@@ -45,9 +45,9 @@ export default function MyRequestCard({ request, onWithdraw }) {
 </button>
 </div>
  
-      <div className="mt-4 text-xs text-[var(--color-text-muted)] flex items-center gap-2">
+      <div className="mt-4 text-xs text-text-muted flex items-center gap-2">
 <span>Requesting for:</span>
-<span className="px-3 py-1 rounded-lg bg-[var(--color-bg-input)] w-fit">
+<span className="px-3 py-1 rounded-lg bg-(--color-bg-input) w-fit">
           {taskTitle}
 </span>
 </div>

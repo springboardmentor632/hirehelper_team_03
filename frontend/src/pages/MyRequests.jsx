@@ -69,7 +69,7 @@ export default function MyRequests() {
   }, []);
  
   return (
-<div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
+<div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
       {/* Desktop Sidebar */}
 <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
 <Sidebar />
@@ -84,7 +84,7 @@ export default function MyRequests() {
       )}
  
       {/* Main */}
-<main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
+<main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
         {/* Header */}
 <div className="mb-6">
 <div className="flex items-center justify-between">
@@ -94,7 +94,7 @@ export default function MyRequests() {
  
             <div className="flex-1">
 <h1 className="text-xl font-semibold">My Requests</h1>
-<p className="text-sm text-[var(--color-text-muted)]">
+<p className="text-sm text-text-muted">
                 Track the help requests you've sent
 </p>
 </div>
@@ -108,7 +108,7 @@ export default function MyRequests() {
               />
 </div>
  
-            <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]" />
+            <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
 </div>
  
           <div className="md:hidden mt-4">
@@ -125,11 +125,11 @@ export default function MyRequests() {
         {/* Cards */}
         {loading ? (
 <div className="flex justify-center items-center h-40">
-<p className="text-[var(--color-text-muted)]">Loading...</p>
+<p className="text-text-muted">Loading...</p>
 </div>
         ) : myRequests.length === 0 ? (
 <div className="flex justify-center items-center h-40">
-<p className="text-[var(--color-text-muted)]">No requests sent yet.</p>
+<p className="text-text-muted">No requests sent yet.</p>
 </div>
         ) : (
 <div className="flex flex-col gap-6">

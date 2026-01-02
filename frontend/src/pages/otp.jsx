@@ -196,25 +196,25 @@ export default function OTPVerification() {
       <div className="xl:hidden contents">
         {/* Decorative circles - Mobile/Tablet */}
         <div className="absolute left-[-100px] top-[-77px] w-[200px] h-[200px] sm:w-[227px] sm:h-[227px] rounded-full bg-[rgba(101,174,233,0.93)]" />
-        <div className="absolute left-[-120px] sm:left-[-136px] bottom-[-80px] sm:bottom-[-100px] w-[200px] h-[200px] sm:w-[227px] sm:h-[227px] rounded-full bg-[rgba(101,174,233,0.93)]" />
+        <div className="absolute left-[-120px] sm:left-[-136px] -bottom-20 sm:bottom-[-100px] w-[200px] h-[200px] sm:w-[227px] sm:h-[227px] rounded-full bg-[rgba(101,174,233,0.93)]" />
         <div className="absolute right-[-100px] sm:right-[-120px] top-[35%] sm:top-[290px] w-[200px] h-[200px] sm:w-[227px] sm:h-[227px] rounded-full bg-[rgba(101,174,233,0.93)]" />
 
         {/* Decorative icons - Mobile/Tablet positioned like in Figma */}
         {/* Top right area */}
-        <div className="absolute right-[20px] sm:right-[30px] top-[100px] sm:top-[98px] text-[#2A85C7] opacity-90">
+        <div className="absolute right-5 sm:right-[30px] top-[100px] sm:top-[98px] text-[#2A85C7] opacity-90">
           <FaBook size={32} className="drop-shadow-md" />
         </div>
-        <div className="absolute right-[80px] sm:right-[100px] top-[30px] sm:top-[0px] text-[#2A85C7] opacity-90">
+        <div className="absolute right-20 sm:right-[100px] top-[30px] sm:top-0 text-[#2A85C7] opacity-90">
           <FaChartBar size={32} className="drop-shadow-md" />
         </div>
 
         {/* Top left area */}
-        <div className="absolute left-[20px] sm:left-[60px] top-[160px] sm:top-[190px] text-[#2A85C7] opacity-90">
+        <div className="absolute left-5 sm:left-[60px] top-40 sm:top-[190px] text-[#2A85C7] opacity-90">
           <FaBox size={32} className="drop-shadow-md" />
         </div>
 
         {/* Middle left */}
-        <div className="absolute left-[10px] sm:left-[20px] top-[50%] text-[#2A85C7] opacity-90">
+        <div className="absolute left-2.5 sm:left-5 top-[50%] text-[#2A85C7] opacity-90">
           <FaChartBar size={32} className="drop-shadow-md" />
         </div>
 
@@ -224,23 +224,23 @@ export default function OTPVerification() {
         </div>
 
         {/* Bottom left */}
-        <div className="absolute left-[30px] sm:left-[40px] bottom-[150px] sm:bottom-[180px] text-[#2A85C7] opacity-90">
+        <div className="absolute left-[30px] sm:left-10 bottom-[150px] sm:bottom-[180px] text-[#2A85C7] opacity-90">
           <FaMusic size={32} className="drop-shadow-md" />
         </div>
-        <div className="absolute left-[80px] sm:left-[120px] bottom-[80px] sm:bottom-[100px] text-[#2A85C7] opacity-90">
+        <div className="absolute left-20 sm:left-[120px] bottom-20 sm:bottom-[100px] text-[#2A85C7] opacity-90">
           <FaBox size={32} className="drop-shadow-md" />
         </div>
 
         {/* Bottom right */}
-        <div className="absolute right-[20px] sm:right-[30px] bottom-[100px] sm:bottom-[120px] text-[#2A85C7] opacity-90">
+        <div className="absolute right-5 sm:right-[30px] bottom-[100px] sm:bottom-[120px] text-[#2A85C7] opacity-90">
           <FaTruck size={32} className="drop-shadow-md" />
         </div>
-        <div className="absolute right-[100px] sm:right-[140px] bottom-[30px] sm:bottom-[40px] text-[#2A85C7] opacity-90">
+        <div className="absolute right-[100px] sm:right-[140px] bottom-[30px] sm:bottom-10 text-[#2A85C7] opacity-90">
           <FaBox size={32} className="drop-shadow-md" />
         </div>
 
         {/* Right middle area */}
-        <div className="absolute right-[10px] sm:right-[15px] top-[65%] text-[#2A85C7] opacity-90">
+        <div className="absolute right-2.5 sm:right-[15px] top-[65%] text-[#2A85C7] opacity-90">
           <FaBriefcase size={32} className="drop-shadow-md" />
         </div>
 
@@ -253,7 +253,7 @@ export default function OTPVerification() {
       {/* Main container - Slightly adjusted for 320px */}
       <div className="relative z-10 w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[580px] xl:max-w-[640px] px-2 py-6 sm:py-8">
         {/* Form card - Smaller on 320px */}
-        <div className="bg-[rgba(101,174,233,0.3)] backdrop-blur-sm rounded-[24px] sm:rounded-[45px] md:rounded-[55px] xl:rounded-[65px] p-3 sm:p-6 md:p-8 lg:p-10 xl:p-12 shadow-xl">
+        <div className="bg-[rgba(101,174,233,0.3)] backdrop-blur-sm rounded-3xl sm:rounded-[45px] md:rounded-[55px] xl:rounded-[65px] p-3 sm:p-6 md:p-8 lg:p-10 xl:p-12 shadow-xl">
           <h2 className="text-[24px] sm:text-[36px] md:text-[44px] lg:text-[52px] xl:text-[60px] font-black text-[rgba(21,130,208,0.93)] mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-5 text-center">
             Verify
           </h2>
@@ -322,7 +322,7 @@ export default function OTPVerification() {
                             lg:text-xl
                             xl:text-2xl
                             font-bold focus:outline-none focus:ring-2 focus:ring-[#1582d0]/50 transition-all
-                            flex-shrink-0"
+                            shrink-0"
                   name={`otp-${index}`}
                 />
               ))}
@@ -339,7 +339,7 @@ export default function OTPVerification() {
                           hover:bg-[#1582d0] active:scale-95 transition-all 
                           shadow-lg hover:shadow-xl 
                           text-xs sm:text-base md:text-lg lg:text-xl
-                          w-full max-w-[120px] sm:max-w-[160px] md:max-w-[180px] lg:max-w-[200px] xl:max-w-[220px]
+                          w-full max-w-[120px] sm:max-w-40 md:max-w-[180px] lg:max-w-[200px] xl:max-w-[220px]
                           flex items-center justify-center"
               >
                 <span className="text-center w-full">Verify</span>

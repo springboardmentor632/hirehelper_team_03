@@ -29,9 +29,9 @@ export default function TaskCard({ task, onRequestClick }) {
   return (
     <div
       className="
-        bg-[var(--color-bg-card)]
-        rounded-[var(--radius-card)]
-        shadow-[var(--shadow-card)]
+        bg-(--color-bg-card)
+        rounded-card
+        shadow-(--shadow-card)
         p-4
         w-full
         max-w-sm
@@ -42,19 +42,19 @@ export default function TaskCard({ task, onRequestClick }) {
         <img
           src={picture}
           alt="Task"
-          className="w-full h-40 object-cover rounded-[var(--radius-card)]"
+          className="w-full h-40 object-cover rounded-card"
         />
       )}
  
       {/* Category + date */}
       <div className="flex gap-2 mb-2">
         {category && (
-          <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
+          <span className="text-xs px-2 py-0.5 rounded bg-(--color-bg-app)">
             {category}
           </span>
         )}
  
-        <span className="ml-auto text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
+        <span className="ml-auto text-xs px-2 py-0.5 rounded bg-(--color-bg-app)">
           {formatDate(start_time)}
         </span>
       </div>
@@ -63,12 +63,12 @@ export default function TaskCard({ task, onRequestClick }) {
       <h3 className="font-semibold mb-1">{title}</h3>
  
       {/* Description */}
-      <p className="text-xs text-[var(--color-text-muted)] mb-3">
+      <p className="text-xs text-text-muted mb-3">
         {description}
       </p>
  
       {/* Location & Time */}
-      <div className="text-xs text-[var(--color-text-muted)] mb-3 space-y-1">
+      <div className="text-xs text-text-muted mb-3 space-y-1">
         <p className="flex items-center gap-1">
           <FiMapPin /> {location}
         </p>

@@ -54,7 +54,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
     <>
       {/* Success Toast - Updated message */}
       {success && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] bg-green-600 text-white px-4 py-2 rounded-lg shadow text-sm">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-60 bg-green-600 text-white px-4 py-2 rounded-lg shadow text-sm">
           Request sent successfully
         </div>
       )}
@@ -93,7 +93,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               <div className="flex-1 bg-gray-50 p-3 rounded-lg border border-gray-200">
                 <div className="flex items-center gap-2">
                   <svg
-                    className="w-4 h-4 text-blue-600 flex-shrink-0"
+                    className="w-4 h-4 text-blue-600 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -120,7 +120,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               <div className="flex-1 bg-gray-50 p-3 rounded-lg border border-gray-200">
                 <div className="flex items-center gap-2">
                   <svg
-                    className="w-4 h-4 text-blue-600 flex-shrink-0"
+                    className="w-4 h-4 text-blue-600 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

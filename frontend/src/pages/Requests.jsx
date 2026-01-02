@@ -84,7 +84,7 @@ export default function Requests() {
     }, []);
  
     return (
-<div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
+<div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
             {/* Sidebar Desktop */}
 <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
 <Sidebar />
@@ -101,7 +101,7 @@ export default function Requests() {
             )}
  
             {/* Main */}
-<main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
+<main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
                 {/* Header */}
 <div className="mb-6">
 <div className="flex items-center justify-between gap-4">
@@ -111,7 +111,7 @@ export default function Requests() {
  
                         <div className="flex-1">
 <h1 className="text-xl font-semibold">Requests</h1>
-<p className="text-sm text-[var(--color-text-muted)]">
+<p className="text-sm text-text-muted">
                                 People who want to help with your tasks
 </p>
 </div>
@@ -125,7 +125,7 @@ export default function Requests() {
                             />
 </div>
  
-                        <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]" />
+                        <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
 </div>
  
                     {/* Mobile Search */}
@@ -143,11 +143,11 @@ export default function Requests() {
                 {/* Cards */}
                 {loading ? (
 <div className="flex justify-center items-center h-40">
-<p className="text-[var(--color-text-muted)]">Loading...</p>
+<p className="text-text-muted">Loading...</p>
 </div>
                 ) : requests.length === 0 ? (
 <div className="flex justify-center items-center h-40">
-<p className="text-[var(--color-text-muted)]">No requests yet.</p>
+<p className="text-text-muted">No requests yet.</p>
 </div>
                 ) : (
 <div className="flex flex-col gap-6">

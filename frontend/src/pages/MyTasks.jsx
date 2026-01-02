@@ -74,7 +74,7 @@ export default function MyTasks() {
   };
  
   return (
-    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
+    <div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
       {/* Desktop Sidebar */}
       <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
         <Sidebar />
@@ -96,14 +96,14 @@ export default function MyTasks() {
       )}
  
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
+      <main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
         {/* Header */}
         <div className="mb-6">
           {/* Top Row */}
           <div className="flex items-center justify-between gap-4">
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden text-2xl text-[var(--color-text-main)]"
+              className="md:hidden text-2xl text-text-main"
               onClick={() => setSidebarOpen(true)}
             >
               <FiMenu />
@@ -112,7 +112,7 @@ export default function MyTasks() {
             {/* Title */}
             <div className="flex-1">
               <h1 className="text-xl font-semibold">My Tasks</h1>
-              <p className="text-sm text-[var(--color-text-muted)]">
+              <p className="text-sm text-text-muted">
                 Manage your posted tasks
               </p>
             </div>
@@ -132,7 +132,7 @@ export default function MyTasks() {
               </div>
  
               {/* Notification Bell (visible on all screens) */}
-              <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]" />
+              <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
             </div>
           </div>
  
@@ -153,7 +153,7 @@ export default function MyTasks() {
         {/* Content: loading / error / grid */}
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <p className="text-[var(--color-text-muted)]">Loading tasks...</p>
+            <p className="text-text-muted">Loading tasks...</p>
           </div>
         ) : error ? (
           <div className="flex justify-center items-center h-40">
@@ -161,10 +161,10 @@ export default function MyTasks() {
           </div>
         ) : tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-center">
-            <p className="text-[var(--color-text-muted)] mb-2">
+            <p className="text-text-muted mb-2">
               No tasks found.
             </p>
-            <p className="text-xs text-[var(--color-text-muted)]">
+            <p className="text-xs text-text-muted">
               Create a task on the Add Task page to see it listed here.
             </p>
           </div>

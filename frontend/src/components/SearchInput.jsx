@@ -14,7 +14,7 @@ export default function SearchInput({
           left-4
           top-1/2
           -translate-y-1/2
-          text-[var(--color-text-muted)]
+          text-text-muted
         "
       />
       <input
@@ -29,11 +29,11 @@ export default function SearchInput({
           py-2.5
           rounded-full
           border
-          border-[var(--color-text-muted)]
-          bg-[var(--color-bg-app)]
+          border-text-muted
+          bg-(--color-bg-app)
           text-sm
-          text-[var(--color-text-main)]
-          placeholder:text-[var(--color-text-muted)]
+          text-text-main
+          placeholder:text-text-muted
           focus:outline-none
         "
       />
