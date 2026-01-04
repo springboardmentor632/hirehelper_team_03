@@ -7,13 +7,17 @@ const requestSchema = new mongoose.Schema(
       ref: "Task",
       required: true
     },
+    text: {
+      type: String,
+      required: false
+    },
     requester: {
-      type: String, 
+      type: String,
       ref: "User",
       required: true
     },
     taskOwner: {
-      type: String, 
+      type: String,
       ref: "User",
       required: true
     },
