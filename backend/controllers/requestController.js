@@ -1,5 +1,7 @@
 import Request from "../models/requestModel.js";
 import Task from "../models/task.js";
+import { createNotification } from "../utils/notificationService.js";
+
 
 export const sendRequest = async (req, res) => {
   try {
@@ -33,6 +35,16 @@ export const sendRequest = async (req, res) => {
       message: "Task request sent successfully",
       request
     });
+    await createNotification(
+      task.user_id,
+      "TASK_REQUEST",
+      "New Task Request",
+      "Someone has requested your task",
+      {
+        taskId: taskId,
+        requesterId: req.user.id
+      }
+    );
   } catch (error) {
     console.error("Send Request Error:", error);
     res.status(500).json({ message: error.message });
@@ -95,6 +107,17 @@ export const acceptRequest = async (req, res) => {
       .populate("taskOwner", "first_name last_name");
 
     res.status(200).json({ message: "Request accepted", request: updated });
+    await createNotification(
+      request.requester,
+      "REQUEST_ACCEPTED",
+      "Request Accepted 🎉",
+      "Your request has been accepted",
+      {
+        taskId: request.task,
+        requestId: request._id
+      }
+    );
+
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
@@ -120,6 +143,17 @@ export const rejectRequest = async (req, res) => {
     await request.save();
 
     return res.status(200).json({ message: "Request rejected" });
+    await createNotification(
+      request.requester,
+      "REQUEST_REJECTED",
+      "Request Rejected",
+      "Your request has been rejected",
+      {
+        taskId: request.task,
+        requestId: request._id
+      }
+    );
+
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }

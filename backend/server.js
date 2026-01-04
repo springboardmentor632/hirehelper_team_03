@@ -5,6 +5,8 @@ import {connectDB} from './config/database.js';
 import authRoutes from './routes/userRoute.js';
 import taskRoutes from './routes/taskRoute.js';
 import requestRoutes from "./routes/requestRoutes.js";
+import "./cron/taskReminder.cron.js";
+import "./cron/notificationCleanup.cron.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
