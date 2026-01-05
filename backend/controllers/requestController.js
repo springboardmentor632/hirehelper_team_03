@@ -5,7 +5,7 @@ import { createNotification } from "../utils/notificationService.js";
 
 export const sendRequest = async (req, res) => {
   try {
-    const { taskId } = req.body;
+    const { taskId,text} = req.body;
 
     if (!taskId) {
       return res.status(400).json({ message: "Task ID required" });
@@ -29,7 +29,8 @@ export const sendRequest = async (req, res) => {
     const request = await Request.create({
       task: taskId,
       requester: req.user.id,
-      taskOwner: task.user_id
+      taskOwner: task.user_id,
+      text: text
     });
     res.status(201).json({
       message: "Task request sent successfully",
