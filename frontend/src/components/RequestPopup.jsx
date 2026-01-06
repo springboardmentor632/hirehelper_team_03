@@ -5,6 +5,7 @@ import { getAuthHeader } from "../utils/auth";
 export default function RequestPopup({ isOpen, task, onClose }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
  
   // Safety check
   if (!isOpen || !task) return null;
@@ -14,18 +15,22 @@ export default function RequestPopup({ isOpen, task, onClose }) {
     try {
       await axios.post(
         "http://localhost:5000/api/requests",
-        { taskId: task._id },
+        {
+          taskId: task._id,
+          text: message.trim() || "",
+        },
         {
           headers: getAuthHeader(),
         }
       );
  
       setSuccess(true);
+      setMessage("");
  
       setTimeout(() => {
         setSuccess(false);
         onClose();
-      }, 1500);
+      }, 1000);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to send request");
     } finally {
@@ -52,48 +57,48 @@ export default function RequestPopup({ isOpen, task, onClose }) {
  
   return (
     <>
-      {/* Success Toast - Updated message */}
+      {/* Success Toast */}
       {success && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-60 bg-green-600 text-white px-4 py-2 rounded-lg shadow text-sm">
           Request sent successfully
         </div>
       )}
  
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        {/* Main Container - Balanced size */}
-        <div className="bg-white rounded-xl shadow-lg w-full max-w-[300px] sm:max-w-[340px] mx-auto">
-          {/* HEADER */}
-          <div className="bg-blue-600 rounded-t-xl p-3">
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
+        {/* Main Container - Compact and Responsive */}
+        <div className="bg-white rounded-xl shadow-lg w-full max-w-[280px] sm:max-w-[340px] mx-auto">
+          {/* HEADER - Compact */}
+          <div className="bg-blue-600 rounded-t-xl p-2.5">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white">Request Task</h2>
               <button
                 onClick={onClose}
-                className="text-white text-xl hover:text-gray-200 transition-colors"
+                className="text-white text-lg sm:text-xl hover:text-gray-200 transition-colors"
               >
                 &times;
               </button>
             </div>
           </div>
  
-          {/* CONTENT */}
-          <div className="p-4">
-            {/* Task Title & Description */}
-            <div className="mb-4">
+          {/* CONTENT - Compact with reduced height */}
+          <div className="p-3 sm:p-4">
+            {/* Task Title & Description - Compact */}
+            <div className="mb-3">
               <h3 className="font-medium text-gray-800 text-sm mb-1 line-clamp-1">
                 {task.title}
               </h3>
-              <p className="text-xs text-gray-600 line-clamp-2 mb-3">
+              <p className="text-xs text-gray-600 line-clamp-2">
                 {task.description}
               </p>
             </div>
  
-            {/* Date & Time - Two Separate Compartments */}
-            <div className="flex gap-2 mb-5">
+            {/* Date & Time - Compact */}
+            <div className="flex gap-2 mb-3">
               {/* Date Compartment */}
-              <div className="flex-1 bg-gray-50 p-3 rounded-lg border border-gray-200">
-                <div className="flex items-center gap-2">
+              <div className="flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm">
+                <div className="flex items-center gap-1.5">
                   <svg
-                    className="w-4 h-4 text-blue-600 shrink-0"
+                    className="w-3.5 h-3.5 text-blue-600 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -105,8 +110,8 @@ export default function RequestPopup({ isOpen, task, onClose }) {
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <div>
-                    <p className="text-[10px] text-gray-500 font-medium">
+                  <div className="flex-1">
+                    <p className="text-[10px] text-gray-500 font-medium mb-0.5">
                       DATE
                     </p>
                     <p className="text-xs font-medium text-gray-800">
@@ -116,11 +121,11 @@ export default function RequestPopup({ isOpen, task, onClose }) {
                 </div>
               </div>
  
-              {/* Time Compartment - Single line time */}
-              <div className="flex-1 bg-gray-50 p-3 rounded-lg border border-gray-200">
-                <div className="flex items-center gap-2">
+              {/* Time Compartment */}
+              <div className="flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm">
+                <div className="flex items-center gap-1.5">
                   <svg
-                    className="w-4 h-4 text-blue-600 shrink-0"
+                    className="w-3.5 h-3.5 text-blue-600 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -132,11 +137,11 @@ export default function RequestPopup({ isOpen, task, onClose }) {
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <div className="min-w-0">
-                    <p className="text-[10px] text-gray-500 font-medium">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] text-gray-500 font-medium mb-0.5">
                       TIME
                     </p>
-                    <p className="text-xs font-medium text-gray-800 whitespace-nowrap">
+                    <p className="text-xs font-medium text-gray-800 whitespace-nowrap truncate">
                       {formatTime(task.start_time)} -{" "}
                       {formatTime(task.end_time)}
                     </p>
@@ -145,19 +150,34 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               </div>
             </div>
  
-            {/* Buttons */}
+            {/* Message Textarea - Compact */}
+            <div className="mb-3">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Message (Optional)
+              </label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message here..."
+                className="w-full p-2 text-xs border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[#4A8AC4] focus:ring-0 focus:ring-transparent resize-none outline-none transition-colors text-gray-900 placeholder-gray-500 min-h-[60px] sm:min-h-[70px]"
+                rows={2}
+                disabled={loading}
+              />
+            </div>
+ 
+            {/* Buttons - Compact and Responsive */}
             <div className="flex gap-2">
               <button
                 onClick={onClose}
                 disabled={loading}
-                className="flex-1 py-2.5 text-xs sm:text-sm rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="flex-1 py-2 text-xs sm:text-sm rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirm}
                 disabled={loading}
-                className="flex-1 py-2.5 text-xs sm:text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-2 text-xs sm:text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-1">
