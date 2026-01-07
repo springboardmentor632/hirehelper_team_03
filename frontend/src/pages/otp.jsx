@@ -127,7 +127,7 @@ export default function OTPVerification() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#d4e2e2] overflow-hidden flex items-center justify-center">
+    <div className="relative min-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
       {/* DESKTOP VERSION - Only visible on xl screens and above */}
       <div className="hidden xl:contents">
         {/* Decorative circles - Desktop */}

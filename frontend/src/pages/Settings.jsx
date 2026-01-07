@@ -3,6 +3,7 @@ import AppLayout from "../components/AppLayout";
 import { getAuthHeader } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
+import NotificationBell from "../components/NotificationBell";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -202,29 +203,35 @@ export default function Settings() {
   return (
     <AppLayout>
       <div className="px-10 py-6 border-b">
-        <div>
-          <h1 className="text-2xl font-bold">Settings</h1>
-          <p className="text-sm text-gray-600">These Settings appear in your user</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Settings</h1>
+            <p className="text-sm text-text-muted">These Settings appear in your user</p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+          </div>
         </div>
       </div>
 
       <div className="px-10 py-8 space-y-7">
         {/* PROFILE */}
-        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[#e9f2f4]">
+        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[var(--color-bg-app)]">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-semibold text-lg">Profile</h2>
-              <p className="text-sm text-gray-600">Manage your account details</p>
+              <p className="text-sm text-text-muted">Manage your account details</p>
             </div>
           </div>
 
-          {loading && <p className="mt-4 text-gray-600">Loading profile...</p>}
+          {loading && <p className="mt-4 text-text-muted">Loading profile...</p>}
           {error && <p className="mt-4 text-red-600">{error}</p>}
 
           {!loading && !error && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3">
-                <p className="text-xs text-gray-500">Display name</p>
+              <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex flex-col gap-3">
+                <p className="text-xs text-text-muted">Display name</p>
                 <input
                   value={
                     displayName !== null
@@ -238,12 +245,12 @@ export default function Settings() {
                   placeholder="Your display name"
                 />
 
-                <p className="text-xs text-gray-500">Phone</p>
+                <p className="text-xs text-text-muted">Phone</p>
                 <p className="font-medium">{user?.phone_number || user?.phone || "—"}</p>
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col gap-3 items-center">
-                <p className="text-xs text-gray-500">Profile Photo</p>
+              <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex flex-col gap-3 items-center">
+                <p className="text-xs text-text-muted">Profile Photo</p>
                 <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
                   <img
                     src={previewImage || user?.profile_picture}
@@ -251,7 +258,7 @@ export default function Settings() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <label className="mt-2 inline-flex items-center gap-2 cursor-pointer bg-(--color-bg-input) px-3 py-2 rounded">
+                <label className="mt-2 inline-flex items-center gap-2 cursor-pointer bg-[var(--color-bg-input)] px-3 py-2 rounded">
                   <input
                     type="file"
                     accept="image/*"
@@ -275,7 +282,7 @@ export default function Settings() {
                     Remove
                   </button>
                 )}
-                <p className="text-xs text-gray-500">Email</p>
+                <p className="text-xs text-text-muted">Email</p>
                 <p className="font-medium">{user?.email_id || user?.email || "—"}</p>
               </div>
 
@@ -293,7 +300,7 @@ export default function Settings() {
         </div>
 
         {/* APP SETTINGS */}
-        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[#e9f2f4]">
+        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[var(--color-bg-app)]">
           <h2 className="font-semibold text-lg">App Settings</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
             <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
@@ -302,7 +309,7 @@ export default function Settings() {
               </div>
               <button
                 onClick={() => navigate("/forgot-password")}
-                className="text-gray-500"
+                className="text-text-muted"
               >
                 <FiChevronRight />
               </button>
@@ -311,7 +318,7 @@ export default function Settings() {
             <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
               <div>
                 <p className="text-sm">Language</p>
-                <p className="text-xs text-gray-500">{language}</p>
+                <p className="text-xs text-text-muted">{language}</p>
               </div>
               <select
                 value={language}
@@ -327,10 +334,10 @@ export default function Settings() {
               </select>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
+            <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex items-center justify-between">
               <div>
                 <p className="text-sm">Notification</p>
-                <p className="text-xs text-gray-500">Receive push notifications</p>
+                <p className="text-xs text-text-muted">Receive push notifications</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -347,10 +354,10 @@ export default function Settings() {
               </label>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
+            <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex items-center justify-between">
               <div>
                 <p className="text-sm">Dark Mode</p>
-                <p className="text-xs text-gray-500">Toggle dark theme</p>
+                <p className="text-xs text-text-muted">Toggle dark theme</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -368,13 +375,13 @@ export default function Settings() {
         </div>
 
         {/* HELP */}
-        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[#e9f2f4]">
+        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[var(--color-bg-app)]">
           <h2 className="font-semibold text-lg">Help</h2>
 
           <div className="flex gap-4 mt-6 flex-wrap">
-            <button className="bg-white px-4 py-2 rounded shadow-sm">FAQ</button>
-            <button className="bg-white px-4 py-2 rounded shadow-sm">Terms & condition</button>
-            <button className="bg-white px-4 py-2 rounded shadow-sm">Privacy Policy</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm">FAQ</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm">Terms & condition</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm">Privacy Policy</button>
             <div className="flex-1" />
             <button
               onClick={handleLogout}

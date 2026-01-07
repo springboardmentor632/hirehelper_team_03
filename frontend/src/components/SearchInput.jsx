@@ -30,7 +30,7 @@ export default function SearchInput({
           rounded-full
           border
           border-text-muted
-          bg-(--color-bg-app)
+          bg-[var(--color-bg-app)]
           text-sm
           text-text-main
           placeholder:text-text-muted

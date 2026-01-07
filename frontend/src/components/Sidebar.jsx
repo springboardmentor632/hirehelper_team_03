@@ -68,7 +68,7 @@ export default function Sidebar({ onClose }) {
   }, [showLogoutConfirm]);
 
   return (
-    <aside className="w-64 bg-(--color-primary) text-white flex flex-col justify-between md:sticky md:top-0 md:h-screen md:flex-none">
+    <aside className="w-64 bg-[var(--color-sidebar)] text-[var(--color-text-main)] flex flex-col justify-between md:sticky md:top-0 md:h-screen md:flex-none">
       {/* Logo */}
       <div>
         <div className="px-6 py-5 text-xl font-bold flex justify-between">
@@ -94,12 +94,12 @@ export default function Sidebar({ onClose }) {
       </div>
 
       {/* User Section */}
-      <div className="px-4 py-4 flex justify-between bg-cyan-300/20 rounded-md items-center">
+      <div className="px-4 py-4 flex justify-between bg-[var(--color-sidebar-contrast)] rounded-md items-center">
         <button
           onClick={() => navigate("/profile")}
           className="flex gap-3 text-left items-center"
         >
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-white/30 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-[var(--color-bg-card)] flex items-center justify-center flex-shrink-0">
             {currentUser?.profile_picture ? (
               <img
                 src={currentUser.profile_picture}
@@ -107,7 +107,7 @@ export default function Sidebar({ onClose }) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-xs font-semibold text-(--color-primary)">
+              <span className="text-xs font-semibold text-[var(--color-primary)]">
                 {currentUser ? `${currentUser.first_name?.[0] || ''}${currentUser.last_name?.[0] || ''}` : 'U'}
               </span>
             )}
@@ -135,22 +135,22 @@ export default function Sidebar({ onClose }) {
             className="absolute inset-0 bg-black/50"
             onClick={() => setShowLogoutConfirm(false)}
           />
-          <div className="relative bg-white text-black p-6 rounded-lg z-10">
+          <div className="relative bg-[var(--color-bg-card)] text-text-main p-6 rounded-lg z-10">
             <h3 className="font-semibold mb-2">Confirm Logout</h3>
             <p className="mb-4">Are you sure?</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="bg-cyan-600 px-4 py-2 text-white rounded"
+                className="bg-[var(--color-primary)] px-4 py-2 text-white rounded"
               >
                 Stay
               </button>
               <button
                 onClick={handleLogout}
-                className="bg-red-600 px-4 py-2 text-white rounded"
+                className="bg-[var(--color-danger)] px-4 py-2 text-white rounded"
               >
                 Logout
-              </button>
+              </button> 
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ function NavItem({ to, icon, label }) {
       to={to}
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-2 rounded-lg ${
-          isActive ? "bg-(--color-primary-hover)" : "hover:bg-white/20"
+          isActive ? "bg-[var(--color-primary-hover)]" : "hover:bg-[var(--color-sidebar-contrast)]"
         }`
       }
     >
@@ -224,7 +224,7 @@ export function MyRequestCard({ request, onWithdraw }) {
 
       <div className="mt-4 text-xs flex gap-2">
         <span>Requesting for:</span>
-        <span className="px-3 py-1 bg-(--color-bg-input) rounded">
+        <span className="px-3 py-1 bg-[var(--color-bg-input)] rounded">
           {taskTitle}
         </span>
       </div>

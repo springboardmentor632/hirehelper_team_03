@@ -1,4 +1,5 @@
-import { FiSearch, FiBell, FiMenu } from "react-icons/fi";
+import { FiSearch, FiMenu } from "react-icons/fi";
+import NotificationBell from "../components/NotificationBell";
 import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import SearchInput from "../components/SearchInput";
@@ -114,7 +115,7 @@ export default function Notifications() {
   );
 
   return (
-    <div className="flex min-h-screen bg-[#e9f2f4]">
+    <div className="flex min-h-screen bg-[var(--color-bg-app)]">
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
         <Sidebar />
@@ -162,6 +163,8 @@ export default function Notifications() {
                   />
                 </form>
               </div>
+
+              <NotificationBell />
             </div>
           </div>
 
@@ -220,7 +223,7 @@ export default function Notifications() {
               <p className="text-gray-700 text-sm mt-1">
                 {item.message}
               </p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-text-muted mt-2">
                 {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString()}
               </p>
             </div>

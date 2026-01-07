@@ -29,7 +29,7 @@ export default function TaskCard({ task, onRequestClick }) {
   return (
     <div
       className="
-        bg-(--color-bg-card)
+        bg-[var(--color-bg-card)]
         rounded-card
         shadow-(--shadow-card)
         p-4
@@ -49,12 +49,12 @@ export default function TaskCard({ task, onRequestClick }) {
       {/* Category + date */}
       <div className="flex gap-2 mb-2">
         {category && (
-          <span className="text-xs px-2 py-0.5 rounded bg-(--color-bg-app)">
+          <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
             {category}
           </span>
         )}
  
-        <span className="ml-auto text-xs px-2 py-0.5 rounded bg-(--color-bg-app)">
+        <span className="ml-auto text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
           {formatDate(start_time)}
         </span>
       </div>

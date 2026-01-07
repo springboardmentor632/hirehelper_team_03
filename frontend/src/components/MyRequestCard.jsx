@@ -24,7 +24,7 @@ export default function MyRequestCard({ request, onWithdraw }) {
   const taskTitle = request.task?.title || request.task || "Task";
  
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition-all">
+    <div className="bg-[var(--color-bg-card)] rounded-2xl shadow-card p-5 border border-gray-200 hover:shadow-lg transition-all">
       <div className="flex justify-between items-start">
         <div className="flex flex-col">
           <h2 className="font-semibold text-lg">Sent To: {ownerName}</h2>
@@ -51,7 +51,7 @@ export default function MyRequestCard({ request, onWithdraw }) {
  
       <div className="mt-4 text-xs text-text-muted flex items-center gap-2">
         <span>Requesting for:</span>
-        <span className="px-3 py-1 rounded-lg bg-(--color-bg-input) w-fit">
+        <span className="px-3 py-1 rounded-lg bg-[var(--color-bg-input)] w-fit">
           {taskTitle}
         </span>
       </div>

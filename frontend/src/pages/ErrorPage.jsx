@@ -10,15 +10,14 @@ export default function ErrorPage() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ backgroundColor: "#dce6ea" }}
+      className="min-h-screen flex items-center justify-center px-4 bg-[var(--color-bg-app)]"
     >
       <div className="text-center max-w-md">
         {/* Icon */}
         <div className="flex justify-center mb-4">
           <HiOutlineExclamationCircle
             size={90}
-            style={{ color: "#5FA4E6" }}
+            className="text-[var(--color-primary)]"
           />
         </div>
 
@@ -43,14 +42,14 @@ export default function ErrorPage() {
         <div className="flex justify-center gap-4">
           <button
             onClick={handleGoBack}
-            className="px-6 py-3 font-medium rounded-lg transition-all duration-200 bg-[#5FA4E6] text-white hover:bg-[#4A8AC4] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5FA4E6]"
+            className="px-6 py-3 font-medium rounded-lg transition-all duration-200 bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)]"
           >
             Go Back
           </button>
 
           <button
             onClick={() => navigate("/")}
-            className="px-6 py-3 font-medium rounded-lg transition-all duration-200 border border-[#5FA4E6] text-[#5FA4E6] hover:bg-[#5FA4E6] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5FA4E6]"
+            className="px-6 py-3 font-medium rounded-lg transition-all duration-200 border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)]"
           >
             Home
           </button>

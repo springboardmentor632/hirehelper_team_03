@@ -22,9 +22,9 @@ export default function MyTaskCard({ task }) {
   return (
     <div
       className="
-        bg-(--color-bg-card)
+        bg-[var(--color-bg-card)]
         rounded-card
-        shadow-(--shadow-card)
+        shadow-card
         p-4
         w-full
         max-w-sm
@@ -42,7 +42,7 @@ export default function MyTaskCard({ task }) {
       {/* Category + Status */}
       <div className="flex gap-2 mb-2">
         {category && (
-          <span className="text-xs px-2 py-0.5 rounded bg-(--color-bg-app)">
+          <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-app)]">
             {category}
           </span>
         )}
@@ -53,7 +53,7 @@ export default function MyTaskCard({ task }) {
             text-xs
             px-2 py-0.5
             rounded
-            bg-(--color-bg-app)
+            bg-[var(--color-bg-app)]
             text-text-main
           "
         >

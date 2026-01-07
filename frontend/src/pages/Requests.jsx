@@ -87,7 +87,7 @@ export default function Requests() {
     }, []);
  
     return (
-<div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
+<div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
             {/* Sidebar Desktop */}
 <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
 <Sidebar />

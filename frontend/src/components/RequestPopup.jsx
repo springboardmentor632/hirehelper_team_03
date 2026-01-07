@@ -66,9 +66,9 @@ export default function RequestPopup({ isOpen, task, onClose }) {
  
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
         {/* Main Container - Compact and Responsive */}
-        <div className="bg-white rounded-xl shadow-lg w-full max-w-[280px] sm:max-w-[340px] mx-auto">
+        <div className="bg-[var(--color-bg-card)] rounded-xl shadow-card w-full max-w-[280px] sm:max-w-[340px] mx-auto">
           {/* HEADER - Compact */}
-          <div className="bg-blue-600 rounded-t-xl p-2.5">
+          <div className="bg-[var(--color-primary)] rounded-t-xl p-2.5">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white">Request Task</h2>
               <button
@@ -87,7 +87,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               <h3 className="font-medium text-gray-800 text-sm mb-1 line-clamp-1">
                 {task.title}
               </h3>
-              <p className="text-xs text-gray-600 line-clamp-2">
+              <p className="text-xs text-text-muted line-clamp-2">
                 {task.description}
               </p>
             </div>
@@ -98,7 +98,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               <div className="flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-1.5">
                   <svg
-                    className="w-3.5 h-3.5 text-blue-600 shrink-0"
+                    className="w-3.5 h-3.5 text-[var(--color-primary)] shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -125,7 +125,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               <div className="flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-1.5">
                   <svg
-                    className="w-3.5 h-3.5 text-blue-600 shrink-0"
+                    className="w-3.5 h-3.5 text-[var(--color-primary)] shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -159,7 +159,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message here..."
-                className="w-full p-2 text-xs border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[#4A8AC4] focus:ring-0 focus:ring-transparent resize-none outline-none transition-colors text-gray-900 placeholder-gray-500 min-h-[60px] sm:min-h-[70px]"
+                className="w-full p-2 text-xs border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[var(--color-primary-hover)] focus:ring-0 focus:ring-transparent resize-none outline-none transition-colors text-gray-900 placeholder-gray-500 min-h-[60px] sm:min-h-[70px]"
                 rows={2}
                 disabled={loading}
               />

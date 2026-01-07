@@ -76,7 +76,7 @@ export default function AddTask() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-(--color-bg-app) flex overflow-hidden">
+    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
       {/* Sidebar */}
       <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
         <Sidebar />
@@ -119,7 +119,7 @@ export default function AddTask() {
 
         {/* Card */}
         <div className="flex justify-center">
-          <div className="w-full max-w-3xl bg-(--color-bg-card) rounded-card shadow-(--shadow-card) p-8">
+          <div className="w-full max-w-3xl bg-[var(--color-bg-card)] rounded-card shadow-card p-8">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <Field label="Task Title">
                 <Input
@@ -230,7 +230,7 @@ export default function AddTask() {
               <div className="flex justify-end pt-4">
                 <button
                   type="submit"
-                  className="bg-(--color-primary) text-white px-6 py-2 rounded-xl hover:bg-(--color-primary-hover) transition-all shadow-lg"
+                  className="bg-[var(--color-primary)] text-white px-6 py-2 rounded-xl hover:bg-[var(--color-primary-hover)] transition-all shadow-lg"
                 >
                   Add Task
                 </button>

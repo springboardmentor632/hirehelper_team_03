@@ -123,7 +123,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="relative h-screen max-h-screen bg-[#d4e2e2] overflow-hidden flex items-center justify-center">
+    <div className="relative h-screen max-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
       <AuthBackground />
 
       <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">

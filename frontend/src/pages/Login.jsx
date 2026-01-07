@@ -54,7 +54,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative h-screen max-h-screen bg-[#d4e2e2] overflow-hidden flex items-center justify-center">
+    <div className="relative h-screen max-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
       <AuthBackground />
 
       {/* Main container - Responsive for all sizes */}
