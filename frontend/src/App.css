@@ -3,19 +3,19 @@
 
 /* Custom colors for OTP page */
 @theme {
-  --color-screen: #F1F5F9;
-  --color-card: #F8FAFC;
-  --color-button: var(--color-primary);
-  --color-button-hover: var(--color-primary-hover);
-  --color-text-primary: var(--color-primary);
-  --color-otp-box: #E2E8F0;
-  --color-borderbox: #CBD5E1;
+  --color-screen: #dbe6ea;
+  --color-card: #b1deff;
+  --color-button: #5fa4e6;
+  --color-button-hover: #4a8ac4;
+  --color-text-primary: #5fa4e6;
+  --color-otp-box: #7bc6ff;
+  --color-borderbox: #a4d8ff;
   --radius-card: 20px;
   --radius-button: 10px;
   --radius-otp: 4px;
-  --color-text-main: #0F1724;
-  --color-text-muted: #64748B;
-  --color-bg-app: var(--color-bg-app);
+  --color-text-main: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-bg-app: #dbe6ea;
 }
 
 /* Global layout styles */

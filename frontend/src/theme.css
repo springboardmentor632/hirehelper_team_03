@@ -1,29 +1,29 @@
 :root {
-  /* Brand Colors (muted slate) */
-  --color-primary: #64748B;     /* Slate blue-gray */
-  --color-primary-hover: #475569;
+  /* Brand Colors */
+  --color-primary: #5FA4E6;     /* Sidebar Blue */
+  --color-primary-hover: #4A8AC4;
 
   /* Backgrounds */
-  --color-bg-app: #F1F5F9;      /* soft slate background */
-  --color-bg-card: #F8FAFC;     /* card surface */
-  --color-bg-input: #EEF2F4;    /* input surface */
-  --color-sidebar: #E2E8F0;     /* sidebar surface */
-  --color-sidebar-contrast: rgba(226,232,240,0.12);
+  --color-bg-app: #DBE6EA;      /* Main Dashboard Background */
+  --color-bg-card: #FFFFFF;
+  --color-bg-input: #DBE6EA;    /* input surface */
+  --color-sidebar: #5FA4E6;     /* sidebar surface (blue) */
+  --color-sidebar-contrast: rgba(95,164,230,0.12);
   --color-border: #CBD5E1;
 
   /* Actions */
-  --color-success: #16A34A;     /* Green Buttons */
-  --color-danger: #DC2626;      /* Red Buttons */
+  --color-success: #10B949;     /* Green Buttons */
+  --color-danger: #E81C1C;      /* Red Buttons */
 
   /* Typography */
-  --color-text-main: #0F1724;
-  --color-text-muted: #64748B;
+  --color-text-main: #1F2937;
+  --color-text-muted: #6B7280;
   --font-family-main: 'Inter', system-ui, sans-serif;
 
   /* Spacing & Layout */
   --radius-card: 20px;
   --radius-button: 8px;
-  --shadow-card: 0 4px 14px rgba(6,12,20,0.06);
+  --shadow-card: 0 4px 15px rgba(0,0,0,0.05);
 } 
 
 /* Dark mode variables applied when `.dark` is present on <html> or <body> */

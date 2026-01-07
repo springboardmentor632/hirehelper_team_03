@@ -217,7 +217,7 @@ export default function Settings() {
 
       <div className="px-10 py-8 space-y-7">
         {/* PROFILE */}
-        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[var(--color-bg-app)]">
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-semibold text-lg">Profile</h2>
@@ -241,7 +241,7 @@ export default function Settings() {
                       : ""
                   }
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="border rounded px-3 py-2"
+                  className="border-[var(--color-border)] bg-[var(--color-bg-input)] rounded px-3 py-2 text-text-main"
                   placeholder="Your display name"
                 />
 
@@ -251,7 +251,7 @@ export default function Settings() {
 
               <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex flex-col gap-3 items-center">
                 <p className="text-xs text-text-muted">Profile Photo</p>
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-[var(--color-bg-input)]">
                   <img
                     src={previewImage || user?.profile_picture}
                     alt="Profile"
@@ -277,7 +277,7 @@ export default function Settings() {
                       }
                       setPreviewImage(null);
                     }}
-                    className="text-sm text-red-600"
+                    className="text-sm text-[var(--color-danger)]"
                   >
                     Remove
                   </button>
@@ -290,7 +290,7 @@ export default function Settings() {
                 <button
                   onClick={handleSaveProfile}
                   disabled={savingProfile}
-                  className={`bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full ${savingProfile ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  className={`bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-full ${savingProfile ? 'opacity-60 cursor-not-allowed' : ''}`} 
                 >
                   {savingProfile ? 'Saving...' : 'Save Profile'}
                 </button>
@@ -300,10 +300,10 @@ export default function Settings() {
         </div>
 
         {/* APP SETTINGS */}
-        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[var(--color-bg-app)]">
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
           <h2 className="font-semibold text-lg">App Settings</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-            <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
+            <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card border border-[var(--color-border)] flex items-center justify-between text-text-main">
               <div>
                 <p className="text-sm">Change Password</p>
               </div>
@@ -315,7 +315,7 @@ export default function Settings() {
               </button>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
+            <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card border border-[var(--color-border)] flex items-center justify-between text-text-main">
               <div>
                 <p className="text-sm">Language</p>
                 <p className="text-xs text-text-muted">{language}</p>
@@ -326,7 +326,7 @@ export default function Settings() {
                   setLanguage(e.target.value);
                   localStorage.setItem("language", e.target.value);
                 }}
-                className="rounded-md border px-2 py-1"
+                className="rounded-md border-[var(--color-border)] bg-[var(--color-bg-input)] px-2 py-1 text-text-main"
               >
                 <option>English</option>
                 <option>Spanish</option>
@@ -342,16 +342,19 @@ export default function Settings() {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  className="sr-only peer"
+                  className="sr-only"
                   checked={notificationsEnabled}
                   onChange={(e) => setNotificationsEnabled(e.target.checked)}
                   aria-checked={notificationsEnabled}
                 />
 
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:bg-blue-600 relative transition-colors duration-200">
-                  <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 peer-checked:translate-x-5" />
+                <div className={`w-11 h-6 ${notificationsEnabled ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-bg-input)]'} peer-focus:outline-none rounded-full relative transition-colors duration-200`}>
+                  <div
+                    className="absolute left-0.5 top-0.5 w-5 h-5 bg-[var(--color-bg-card)] rounded-full shadow transition-transform duration-200"
+                    style={{ transform: notificationsEnabled ? 'translateX(20px)' : 'translateX(0)' }}
+                  />
                 </div>
-              </label>
+              </label> 
             </div>
 
             <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex items-center justify-between">
@@ -362,26 +365,29 @@ export default function Settings() {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  className="sr-only peer"
+                  className="sr-only"
                   checked={darkMode}
                   onChange={(e) => setDarkMode(e.target.checked)}
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:bg-gray-800 relative transition-colors duration-200">
-                  <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 peer-checked:translate-x-5" />
+                <div className={`w-11 h-6 ${darkMode ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-bg-input)]'} peer-focus:outline-none rounded-full relative transition-colors duration-200`}>
+                  <div
+                    className="absolute left-0.5 top-0.5 w-5 h-5 bg-[var(--color-bg-card)] rounded-full shadow transition-transform duration-200"
+                    style={{ transform: darkMode ? 'translateX(20px)' : 'translateX(0)' }}
+                  />
                 </div>
-              </label>
+              </label> 
             </div>
           </div>
         </div>
 
         {/* HELP */}
-        <div className="rounded-2xl border-2 border-gray-300 p-6 bg-[var(--color-bg-app)]">
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
           <h2 className="font-semibold text-lg">Help</h2>
 
           <div className="flex gap-4 mt-6 flex-wrap">
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm">FAQ</button>
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm">Terms & condition</button>
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm">Privacy Policy</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">FAQ</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">Terms & condition</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">Privacy Policy</button>
             <div className="flex-1" />
             <button
               onClick={handleLogout}

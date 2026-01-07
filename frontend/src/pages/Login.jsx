@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
@@ -6,6 +6,13 @@ import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  // If a token exists the user is already logged in — redirect to dashboard
+  useEffect(() => {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) navigate("/", { replace: true });
+  }, [navigate]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +68,7 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         {/* Form card */}
         <div className="block md:hidden w-full text-center mb-4">
-          <h1 className="text-lg sm:text-2xl font-extrabold text-(--color-primary) tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight">
             Hire-A Helper
           </h1>
         </div>
