@@ -6,8 +6,8 @@ export default function AppLayout({ children }) {
       {/* Sidebar */}
       <Sidebar />
 
-      {/* Page content */}
-      <div className="flex-1">
+      {/* Page content (scrollable) */}
+      <div className="flex-1 overflow-auto max-h-screen">
         {children}
       </div>
     </div>

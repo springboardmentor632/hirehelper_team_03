@@ -277,3 +277,61 @@ export const resendOtp = async (req, res) => {
   }
 };
 
+// Get current user profile
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    return res.status(200).json({ user });
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update current user (display name, profile picture)
+export const updateMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const { display_name, first_name, last_name } = req.body;
+
+    if (display_name) {
+      const parts = String(display_name).trim().split(/\s+/);
+      user.first_name = parts.shift() || '';
+      user.last_name = parts.length ? parts.join(' ') : '';
+    } else {
+      if (first_name) user.first_name = first_name;
+      if (last_name) user.last_name = last_name;
+    }
+
+    // If profile picture uploaded, push to cloudinary and set
+    if (req.file) {
+      try {
+        const uploadResult = await uploadToCloudinary(req.file.buffer);
+        user.profile_picture = uploadResult.secure_url;
+      } catch (err) {
+        console.error('Cloudinary upload failed', err);
+        return res.status(500).json({ message: 'Failed to upload profile picture' });
+      }
+    }
+
+    await user.save();
+
+    const userResp = {
+      id: user._id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email_id: user.email_id,
+      phone_number: user.phone_number,
+      profile_picture: user.profile_picture,
+      isVerified: user.isVerified,
+    };
+
+    return res.status(200).json({ message: 'Profile updated', user: userResp });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+

@@ -18,15 +18,44 @@ import { useState, useEffect } from "react";
 export default function Sidebar({ onClose }) {
   const navigate = useNavigate();
 
-  const storedUser =
-    localStorage.getItem("user") || sessionStorage.getItem("user");
-  const user = storedUser ? JSON.parse(storedUser) : null;
+  const [currentUser, setCurrentUser] = useState(() => {
+    const stored = localStorage.getItem("user") || sessionStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  });
 
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === 'user') {
+        const stored = localStorage.getItem('user') || sessionStorage.getItem('user');
+        setCurrentUser(stored ? JSON.parse(stored) : null);
+      }
+    };
+
+    const onUserUpdate = (e) => {
+      if (e?.detail === null) {
+        setCurrentUser(null);
+      } else if (e?.detail) {
+        setCurrentUser(e.detail);
+      } else {
+        const stored = localStorage.getItem('user') || sessionStorage.getItem('user');
+        setCurrentUser(stored ? JSON.parse(stored) : null);
+      }
+    };
+
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('user:update', onUserUpdate);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('user:update', onUserUpdate);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
+    window.dispatchEvent(new CustomEvent('user:update', { detail: null }));
     navigate("/login");
   };
 
@@ -39,7 +68,7 @@ export default function Sidebar({ onClose }) {
   }, [showLogoutConfirm]);
 
   return (
-    <aside className="w-64 min-h-screen bg-(--color-primary) text-white flex flex-col justify-between">
+    <aside className="w-64 bg-(--color-primary) text-white flex flex-col justify-between md:sticky md:top-0 md:h-screen md:flex-none">
       {/* Logo */}
       <div>
         <div className="px-6 py-5 text-xl font-bold flex justify-between">
@@ -65,18 +94,30 @@ export default function Sidebar({ onClose }) {
       </div>
 
       {/* User Section */}
-      <div className="px-4 py-4 flex justify-between bg-cyan-300/20 rounded-md">
+      <div className="px-4 py-4 flex justify-between bg-cyan-300/20 rounded-md items-center">
         <button
           onClick={() => navigate("/profile")}
-          className="flex gap-3 text-left"
+          className="flex gap-3 text-left items-center"
         >
-          <div className="w-10 h-10 rounded-full bg-white/30" />
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-white/30 flex items-center justify-center flex-shrink-0">
+            {currentUser?.profile_picture ? (
+              <img
+                src={currentUser.profile_picture}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-xs font-semibold text-(--color-primary)">
+                {currentUser ? `${currentUser.first_name?.[0] || ''}${currentUser.last_name?.[0] || ''}` : 'U'}
+              </span>
+            )}
+          </div>
           <div>
             <p className="text-sm font-semibold">
-              {user ? `${user.first_name} ${user.last_name}` : "User"}
+              {currentUser ? `${currentUser.first_name} ${currentUser.last_name}` : "User"}
             </p>
             <p className="text-xs opacity-80">
-              {user?.email_id || "email not available"}
+              {currentUser?.email_id || "email not available"}
             </p>
           </div>
         </button>

@@ -9,6 +9,7 @@ import AddTask from "./pages/AddTask";
 import Requests from "./pages/Requests";
 import MyRequests from "./pages/MyRequests";
 import Notifications from "./pages/Notifications";
+import Settings from "./pages/Settings";
 import ErrorPage from "./pages/ErrorPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -36,6 +37,15 @@ function App() {
         element={
           <ProtectedRoute>
             <Notifications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         }
       />

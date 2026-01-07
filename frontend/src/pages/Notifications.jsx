@@ -19,7 +19,7 @@ export default function Notifications() {
       setLoading(true);
       setError(null);
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/notifications`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications`,
         {
           headers: getAuthHeader()
         }
@@ -42,7 +42,7 @@ export default function Notifications() {
   const deleteNotification = async (id) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/notifications/${id}`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications/${id}`,
         {
           method: "DELETE",
           headers: getAuthHeader()
@@ -64,7 +64,7 @@ export default function Notifications() {
   const clearAllNotifications = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/notifications/clear`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications/clear`,
         {
           method: "DELETE",
           headers: getAuthHeader()
