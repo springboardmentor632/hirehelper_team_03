@@ -1,10 +1,13 @@
 import { useState, useRef } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { getAuthHeader } from "../utils/auth";
-import { FiMenu, FiBell, FiUpload, FiCalendar, FiClock } from "react-icons/fi";
+import { FiMenu, FiUpload, FiCalendar, FiClock } from "react-icons/fi";
+import NotificationBell from "../components/NotificationBell";
 
 export default function AddTask() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Form state
@@ -109,7 +112,7 @@ export default function AddTask() {
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <FiBell className="text-xl cursor-pointer text-text-muted" />
+              <NotificationBell />
             </div>
           </div>
         </div>

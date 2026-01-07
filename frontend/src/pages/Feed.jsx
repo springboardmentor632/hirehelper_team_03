@@ -3,9 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TaskCard from "../components/TaskCard";
-import { FiMenu, FiBell, FiSearch } from "react-icons/fi";
+import { FiMenu, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
 import RequestPopup from "../components/RequestPopup";
+import NotificationBell from "../components/NotificationBell";
 import { getAuthHeader } from "../utils/auth";
  
 export default function Feed() {
@@ -142,7 +143,7 @@ export default function Feed() {
               </div>
  
               {/* Notification Bell */}
-              <FiBell className="text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)]" />
+              <NotificationBell />
             </div>
           </div>
  
