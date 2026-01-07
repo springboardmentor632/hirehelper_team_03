@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import MyTaskCard from "../components/MyTaskCard";
-import { FiMenu, FiSearch, FiBell } from "react-icons/fi";
+import { FiMenu, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
+import NotificationBell from "../components/NotificationBell";
 import { getAuthHeader } from "../utils/auth";
  
 export default function MyTasks() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -132,7 +135,7 @@ export default function MyTasks() {
               </div>
  
               {/* Notification Bell (visible on all screens) */}
-              <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
+              <NotificationBell />
             </div>
           </div>
  

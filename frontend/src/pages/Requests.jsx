@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import { FiMenu, FiBell, FiSearch } from "react-icons/fi";
+import { FiMenu, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
 import RequestCard from "../components/RequestCard";
+import NotificationBell from "../components/NotificationBell";
  
 export default function Requests() {
+    const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -125,7 +128,7 @@ export default function Requests() {
                             />
 </div>
  
-                        <FiBell className="text-xl cursor-pointer text-text-muted hover:text-text-main" />
+                        <NotificationBell />
 </div>
  
                     {/* Mobile Search */}

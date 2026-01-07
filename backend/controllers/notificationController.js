@@ -33,6 +33,26 @@ export const markAsRead = async (req, res) => {
   }
 };
 
+export const deleteNotification = async (req, res) => {
+  try {
+    const notification = await Notification.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id
+    });
+
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    return res.status(200).json({
+      message: "Notification deleted",
+      id: req.params.id
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const clearAllNotifications = async (req, res) => {
   try {
     await Notification.deleteMany({ user: req.user.id });

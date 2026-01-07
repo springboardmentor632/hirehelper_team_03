@@ -143,7 +143,6 @@ export const rejectRequest = async (req, res) => {
     request.status = "rejected";
     await request.save();
 
-    return res.status(200).json({ message: "Request rejected" });
     await createNotification(
       request.requester,
       "REQUEST_REJECTED",
@@ -154,6 +153,8 @@ export const rejectRequest = async (req, res) => {
         requestId: request._id
       }
     );
+
+    return res.status(200).json({ message: "Request rejected" });
 
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
