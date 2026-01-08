@@ -96,8 +96,8 @@ export default function Sidebar({ onClose }) {
       {/* User Section */}
       <div className="px-4 py-4 flex justify-between bg-[var(--color-sidebar-contrast)] rounded-md items-center">
         <button
-          onClick={() => navigate("/profile")}
-          className="flex gap-3 text-left items-center"
+          onClick={() => navigate("/settings")}
+          className="flex gap-3 text-left items-center cursor-pointer"
         >
           <div className="w-10 h-10 rounded-full overflow-hidden bg-[var(--color-bg-card)] flex items-center justify-center flex-shrink-0">
             {currentUser?.profile_picture ? (
@@ -137,7 +137,7 @@ export default function Sidebar({ onClose }) {
           />
           <div className="relative bg-[var(--color-bg-card)] text-text-main p-6 rounded-lg z-10">
             <h3 className="font-semibold mb-2">Confirm Logout</h3>
-            <p className="mb-4">Are you sure?</p>
+            <p className="mb-4">Are you sure you want to logout</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getToken } from "../utils/auth";
 import axios from "axios"; //  API calls
 import { useNavigate } from "react-router-dom"; // Navigation
 import {
@@ -32,6 +33,12 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (getToken()) {
+      navigate("/feed", { replace: true });
+    }
+  }, []);
 
   // Terms modal state
   const [showTerms, setShowTerms] = useState(false);
