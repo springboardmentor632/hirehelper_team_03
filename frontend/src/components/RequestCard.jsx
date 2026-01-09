@@ -56,7 +56,7 @@ export default function RequestCard({ request, onDecline, onAccept }) {
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+      <div className="bg-[var(--color-bg-card)] rounded-xl shadow-sm border border-[var(--color-border)] overflow-hidden hover:shadow-md transition-shadow">
         {/* Header with Status Badge */}
         <div className="relative p-5 pb-0">
           <div className="flex justify-between items-start mb-3">
@@ -65,10 +65,10 @@ export default function RequestCard({ request, onDecline, onAccept }) {
             </h3>
             <span className={`text-xs font-bold px-3 py-1 rounded-full ${
               isAccepted 
-                ? "bg-green-100 text-green-700" 
+                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" 
                 : isPending 
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-red-100 text-red-700"
+                ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
             }`}>
               {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
             </span>
@@ -88,7 +88,7 @@ export default function RequestCard({ request, onDecline, onAccept }) {
           </p>
 
           {/* Meta Info */}
-          <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)] py-3 border-t border-gray-100">
+          <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)] py-3 border-t border-[var(--color-border)]">
             <div className="flex items-center gap-1">
               <FiClock size={14} />
               <span>{formatTime(request.createdAt)}</span>
@@ -100,7 +100,7 @@ export default function RequestCard({ request, onDecline, onAccept }) {
         </div>
 
         {/* Action Button */}
-        <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
+        <div className="px-5 py-3 border-t border-[var(--color-border)] bg-[var(--color-bg-input)]">
           {isPending ? (
             <div className="flex gap-2">
               <button

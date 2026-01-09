@@ -6,8 +6,10 @@ import { FiMenu, FiSearch } from "react-icons/fi";
 import SearchInput from "../components/SearchInput";
 import NotificationBell from "../components/NotificationBell";
 import { getAuthHeader } from "../utils/auth";
+import { useToast } from "../components/Toast";
  
 export default function MyTasks() {
+  const toast = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,12 +70,12 @@ export default function MyTasks() {
  
       // Remove the deleted task from state
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
- 
-      // Show success alert
-      alert("Task deleted successfully!");
+
+      // Show success toast
+      toast.success("Task deleted successfully!");
     } catch (err) {
-      // Show error alert
-      alert(
+      // Show error toast
+      toast.error(
         err.response?.data?.message ||
           "Failed to delete task. Please try again."
       );

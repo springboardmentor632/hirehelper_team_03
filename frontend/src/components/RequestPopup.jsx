@@ -1,8 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 import { getAuthHeader } from "../utils/auth";
+import { useToast } from "./Toast";
  
 export default function RequestPopup({ isOpen, task, onClose }) {
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [message, setMessage] = useState("");
@@ -32,7 +34,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
         onClose();
       }, 1000);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to send request");
+      toast.error(err.response?.data?.message || "Failed to send request");
     } finally {
       setLoading(false);
     }
@@ -84,10 +86,10 @@ export default function RequestPopup({ isOpen, task, onClose }) {
           <div className="p-3 sm:p-4">
             {/* Task Title & Description - Compact */}
             <div className="mb-3">
-              <h3 className="font-medium text-gray-800 text-sm mb-1 line-clamp-1">
+              <h3 className="font-medium text-[var(--color-text-main)] text-sm mb-1 line-clamp-1">
                 {task.title}
               </h3>
-              <p className="text-xs text-text-muted line-clamp-2">
+              <p className="text-xs text-[var(--color-text-muted)] line-clamp-2">
                 {task.description}
               </p>
             </div>
@@ -95,7 +97,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
             {/* Date & Time - Compact */}
             <div className="flex gap-2 mb-3">
               {/* Date Compartment */}
-              <div className="flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex-1 bg-[var(--color-bg-input)] p-2 rounded-lg border border-[var(--color-border)] shadow-sm">
                 <div className="flex items-center gap-1.5">
                   <svg
                     className="w-3.5 h-3.5 text-[var(--color-primary)] shrink-0"
@@ -111,18 +113,18 @@ export default function RequestPopup({ isOpen, task, onClose }) {
                     />
                   </svg>
                   <div className="flex-1">
-                    <p className="text-[10px] text-gray-500 font-medium mb-0.5">
+                    <p className="text-[10px] text-[var(--color-text-muted)] font-medium mb-0.5">
                       DATE
                     </p>
-                    <p className="text-xs font-medium text-gray-800">
+                    <p className="text-xs font-medium text-[var(--color-text-main)]">
                       {formatDate(task.start_time)}
                     </p>
                   </div>
                 </div>
               </div>
- 
+
               {/* Time Compartment */}
-              <div className="flex-1 bg-gray-50 p-2 rounded-lg border border-gray-200 shadow-sm">
+              <div className="flex-1 bg-[var(--color-bg-input)] p-2 rounded-lg border border-[var(--color-border)] shadow-sm">
                 <div className="flex items-center gap-1.5">
                   <svg
                     className="w-3.5 h-3.5 text-[var(--color-primary)] shrink-0"
@@ -138,10 +140,10 @@ export default function RequestPopup({ isOpen, task, onClose }) {
                     />
                   </svg>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-gray-500 font-medium mb-0.5">
+                    <p className="text-[10px] text-[var(--color-text-muted)] font-medium mb-0.5">
                       TIME
                     </p>
-                    <p className="text-xs font-medium text-gray-800 whitespace-nowrap truncate">
+                    <p className="text-xs font-medium text-[var(--color-text-main)] whitespace-nowrap truncate">
                       {formatTime(task.start_time)} -{" "}
                       {formatTime(task.end_time)}
                     </p>
@@ -152,14 +154,14 @@ export default function RequestPopup({ isOpen, task, onClose }) {
  
             {/* Message Textarea - Compact */}
             <div className="mb-3">
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[var(--color-text-main)] mb-1">
                 Message (Optional)
               </label>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message here..."
-                className="w-full p-2 text-xs border border-gray-300 rounded-lg hover:border-gray-400 focus:border-[var(--color-primary-hover)] focus:ring-0 focus:ring-transparent resize-none outline-none transition-colors text-gray-900 placeholder-gray-500 min-h-[60px] sm:min-h-[70px]"
+                className="w-full p-2 text-xs border border-[var(--color-border)] rounded-lg hover:border-[var(--color-primary)] focus:border-[var(--color-primary-hover)] focus:ring-0 focus:ring-transparent resize-none outline-none transition-colors text-[var(--color-text-main)] placeholder-[var(--color-text-muted)] bg-[var(--color-bg-input)] min-h-[60px] sm:min-h-[70px]"
                 rows={2}
                 disabled={loading}
               />
@@ -170,7 +172,7 @@ export default function RequestPopup({ isOpen, task, onClose }) {
               <button
                 onClick={onClose}
                 disabled={loading}
-                className="flex-1 py-2 text-xs sm:text-sm rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-colors disabled:opacity-50"
+                className="flex-1 py-2 text-xs sm:text-sm rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-bg-input)] hover:border-[var(--color-primary)] transition-colors disabled:opacity-50 text-[var(--color-text-main)] bg-[var(--color-bg-card)]"
               >
                 Cancel
               </button>

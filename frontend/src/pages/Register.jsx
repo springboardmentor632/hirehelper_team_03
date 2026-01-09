@@ -17,8 +17,10 @@ import {
   FaBriefcase,
 } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
+import { useToast } from "../components/Toast";
 
 export default function App() {
+  const toast = useToast();
   const [formData, setFormData] = useState({
     first_name: "", //Must match backend: first_name
     last_name: "",
@@ -66,7 +68,7 @@ export default function App() {
 
     // Frontend validation
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match");
+      toast.error("Passwords don't match");
       return;
     }
 
@@ -91,7 +93,7 @@ export default function App() {
         `${formData.first_name} ${formData.last_name}`
       );
 
-      alert(
+      toast.success(
         response.data.message || "Signup successful! Check your email for OTP."
       );
       navigate("/otp");
@@ -104,23 +106,23 @@ export default function App() {
           backendMessage.includes("already exists") &&
           error.response.data.isVerified === false
         ) {
-          alert("User already registered but not verified. Check OTP.");
+          toast.warning("User already registered but not verified. Check OTP.");
           localStorage.setItem("email", formData.email_id); // for OTP resend
           navigate("/otp");
         }
         // User exists and verified
         else if (backendMessage.includes("already exists")) {
-          alert("User already registered. Please login.");
+          toast.info("User already registered. Please login.");
           navigate("/login");
         }
         // Other backend errors
         else {
-          alert(backendMessage);
+          toast.error(backendMessage);
         }
       } else if (error.request) {
-        alert("No response from server. Check your connection.");
+        toast.error("No response from server. Check your connection.");
       } else {
-        alert("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);

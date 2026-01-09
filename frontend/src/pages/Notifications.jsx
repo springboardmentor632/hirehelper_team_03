@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import AppLayout from "../components/AppLayout";
 import { getAuthHeader } from "../utils/auth";
+import { useToast } from "../components/Toast";
 
 export default function Notifications() {
+  const toast = useToast();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -80,7 +82,7 @@ export default function Notifications() {
       window.dispatchEvent(new Event("notificationUpdated"));
     } catch (err) {
       console.error(err);
-      alert(err.message || "Failed to delete notification");
+      toast.error(err.message || "Failed to delete notification");
     } finally {
       setDeletingIds(prev => {
         const copy = new Set(prev);
@@ -111,10 +113,10 @@ export default function Notifications() {
       }
       await fetchNotifications();
       window.dispatchEvent(new Event("notificationUpdated"));
-      alert("All notifications cleared");
+      toast.success("All notifications cleared");
     } catch (err) {
       console.error(err);
-      alert(err.message || "Failed to clear notifications");
+      toast.error(err.message || "Failed to clear notifications");
     } finally {
       setClearLoading(false);
     }

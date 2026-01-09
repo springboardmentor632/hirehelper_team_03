@@ -1,4 +1,5 @@
 import Task from "../models/task.js";
+import Request from "../models/requestModel.js";
 import { uploadTaskToCloudinary } from "../middleware/uploadTask.js";
 
 export const createTask = async (req, res) => {
@@ -80,7 +81,24 @@ export const getTaskFeed = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const filter = { user_id: { $ne: req.user.id } };
+    // Find all tasks that have accepted requests from the current user
+    const acceptedRequests = await Request.find({
+      requester: req.user.id,
+      status: "accepted"
+    }).select("task");
+
+    // Get array of task IDs to exclude
+    const excludedTaskIds = acceptedRequests.map(req => req.task);
+
+    // Build filter: exclude user's own tasks and tasks with accepted requests
+    const filter = { 
+      user_id: { $ne: req.user.id }
+    };
+
+    // If there are tasks with accepted requests, exclude them
+    if (excludedTaskIds.length > 0) {
+      filter._id = { $nin: excludedTaskIds };
+    }
 
     const totalTasks = await Task.countDocuments(filter);
 
@@ -181,11 +199,28 @@ export const searchFeedTasks = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
+    // Find all tasks that have accepted requests from the current user
+    const acceptedRequests = await Request.find({
+      requester: req.user.id,
+      status: "accepted"
+    }).select("task");
+
+    // Get array of task IDs to exclude
+    const excludedTaskIds = acceptedRequests.map(req => req.task);
+
+    // Build search filter
+    const searchFilter = {
+      $text: { $search: query },
+      user_id: { $ne: req.user.id }
+    };
+
+    // If there are tasks with accepted requests, exclude them
+    if (excludedTaskIds.length > 0) {
+      searchFilter._id = { $nin: excludedTaskIds };
+    }
+
     const tasks = await Task.find(
-      {
-        $text: { $search: query },
-        user_id: { $ne: req.user.id }
-      },
+      searchFilter,
       { score: { $meta: "textScore" } }
     )
       .sort({ score: { $meta: "textScore" } })

@@ -4,9 +4,11 @@ import { getAuthHeader } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import NotificationBell from "../components/NotificationBell";
+import { useToast } from "../components/Toast";
 
 export default function Settings() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,9 +20,6 @@ export default function Settings() {
 
   const [darkMode, setDarkMode] = useState(
     () => JSON.parse(localStorage.getItem("darkMode")) || false
-  );
-  const [language, setLanguage] = useState(
-    () => localStorage.getItem("language") || "English"
   );
 
   useEffect(() => {
@@ -66,6 +65,7 @@ export default function Settings() {
   }, [notificationsEnabled]);
 
   const [displayName, setDisplayName] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedProfileFile, setSelectedProfileFile] = useState(null);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -118,9 +118,10 @@ export default function Settings() {
       const profile = data.user || data;
       setUser(profile);
 
-      // Initialize display name
+      // Initialize display name and phone number
       const uname = profile ? `${profile.first_name} ${profile.last_name}` : "";
       setDisplayName(uname);
+      setPhoneNumber(profile?.phone_number || profile?.phone || "");
       setPreviewImage(profile?.profile_picture || null);
     } catch (err) {
       console.error(err);
@@ -156,14 +157,15 @@ export default function Settings() {
   };
 
   const handleSaveProfile = async () => {
-    if (!displayName && !selectedProfileFile) {
-      return alert('No changes to save');
+    if (!displayName && !selectedProfileFile && !phoneNumber) {
+      return toast.warning('No changes to save');
     }
 
     setSavingProfile(true);
     try {
       const formData = new FormData();
       if (displayName) formData.append('display_name', displayName);
+      if (phoneNumber) formData.append('phone_number', phoneNumber);
       if (selectedProfileFile) formData.append('profile_picture', selectedProfileFile);
 
       const res = await fetch(
@@ -184,6 +186,7 @@ export default function Settings() {
       const updated = data.user || data;
       setUser(updated);
       setDisplayName(`${updated.first_name} ${updated.last_name}`);
+      setPhoneNumber(updated.phone_number || updated.phone || "");
       saveUserToStorage(updated);
       // Notify other components (Sidebar) about the update
       window.dispatchEvent(new CustomEvent('user:update', { detail: updated }));
@@ -193,10 +196,10 @@ export default function Settings() {
       }
       setSelectedProfileFile(null);
       setPreviewImage(updated.profile_picture || null);
-      alert('Profile updated');
+      toast.success('Profile updated');
     } catch (err) {
       console.error(err);
-      alert(err.message || 'Failed to update profile');
+      toast.error(err.message || 'Failed to update profile');
     } finally {
       setSavingProfile(false);
     }
@@ -212,7 +215,7 @@ export default function Settings() {
 
   return (
     <AppLayout>
-      <div className="px-10 py-6 border-b">
+      <div className="px-10 py-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Settings</h1>
@@ -256,7 +259,16 @@ export default function Settings() {
                 />
 
                 <p className="text-xs text-text-muted">Phone</p>
-                <p className="font-medium">{user?.phone_number || user?.phone || "—"}</p>
+                <input
+                  value={
+                    phoneNumber !== null
+                      ? phoneNumber
+                      : user?.phone_number || user?.phone || ""
+                  }
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="border-[var(--color-border)] bg-[var(--color-bg-input)] rounded px-3 py-2 text-text-main"
+                  placeholder="Your phone number"
+                />
               </div>
 
               <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex flex-col gap-3 items-center">
@@ -323,25 +335,6 @@ export default function Settings() {
               >
                 <FiChevronRight />
               </button>
-            </div>
-
-            <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card border border-[var(--color-border)] flex items-center justify-between text-text-main">
-              <div>
-                <p className="text-sm">Language</p>
-                <p className="text-xs text-text-muted">{language}</p>
-              </div>
-              <select
-                value={language}
-                onChange={(e) => {
-                  setLanguage(e.target.value);
-                  localStorage.setItem("language", e.target.value);
-                }}
-                className="rounded-md border-[var(--color-border)] bg-[var(--color-bg-input)] px-2 py-1 text-text-main"
-              >
-                <option>English</option>
-                <option>Spanish</option>
-                <option>French</option>
-              </select>
             </div>
 
             <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex items-center justify-between">

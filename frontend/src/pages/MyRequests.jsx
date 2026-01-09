@@ -90,16 +90,16 @@ export default function MyRequests() {
         <div className="mb-6">
           <div className="flex items-center gap-4">
             <button
-              className="md:hidden text-2xl"
+              className="md:hidden text-2xl text-[var(--color-text-main)]"
               onClick={() => setSidebarOpen(true)}
             >
               <FiMenu />
             </button>
 
             <div className="flex-1">
-              <h1 className="text-xl font-semibold">My Requests</h1>
+              <h1 className="text-xl font-semibold text-[var(--color-text-main)]">My Requests</h1>
               <p className="text-sm text-[var(--color-text-muted)]">
-                Track the help requests you’ve sent
+                Track the help requests you've sent
               </p>
             </div>
 
@@ -129,7 +129,7 @@ export default function MyRequests() {
 
         {/* Content */}
         {loading ? (
-          <div className="h-40 flex items-center justify-center text-sm text-muted">
+          <div className="h-40 flex items-center justify-center text-sm text-[var(--color-text-muted)]">
             Loading requests...
           </div>
         ) : error ? (
@@ -138,15 +138,15 @@ export default function MyRequests() {
           </div>
         ) : myRequests.length === 0 ? (
           <div className="h-40 flex flex-col items-center justify-center text-center">
-            <p className="text-sm text-muted">No requests sent yet</p>
-            <p className="text-xs text-muted mt-1">
+            <p className="text-sm text-[var(--color-text-muted)]">No requests sent yet</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">
               Browse tasks and send your first request
             </p>
           </div>
         ) : filteredRequests.length === 0 ? (
           <div className="h-40 flex flex-col items-center justify-center text-center">
-            <p className="text-sm text-muted">No matching requests</p>
-            <p className="text-xs text-muted mt-1">
+            <p className="text-sm text-[var(--color-text-muted)]">No matching requests</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">
               Try a different search term
             </p>
           </div>

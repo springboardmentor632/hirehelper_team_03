@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useToast } from "./Toast";
 
 /* =======================
    Sidebar Component
@@ -180,6 +181,7 @@ function NavItem({ to, icon, label }) {
 ======================= */
 
 export function MyRequestCard({ request, onWithdraw }) {
+  const toast = useToast();
   const [processing, setProcessing] = useState(false);
 
   const handleWithdraw = async () => {
@@ -188,7 +190,7 @@ export function MyRequestCard({ request, onWithdraw }) {
     try {
       await onWithdraw();
     } catch (err) {
-      alert(err?.response?.data?.message || "Failed to withdraw");
+      toast.error(err?.response?.data?.message || "Failed to withdraw");
     } finally {
       setProcessing(false);
     }
