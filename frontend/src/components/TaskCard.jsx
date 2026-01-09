@@ -31,7 +31,7 @@ export default function TaskCard({ task, onRequestClick }) {
       className="
         bg-[var(--color-bg-card)]
         rounded-card
-        shadow-(--shadow-card)
+        shadow-card
         p-4
         w-full
         max-w-sm

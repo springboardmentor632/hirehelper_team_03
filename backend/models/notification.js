@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const notificationSchema = new mongoose.Schema(
   {
     user: {
-      type: String, 
+      type: String, // userId as string
       required: true
     },
     type: {

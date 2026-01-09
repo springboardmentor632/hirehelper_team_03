@@ -1,272 +1,204 @@
-import { FiSearch, FiMenu } from "react-icons/fi";
-import NotificationBell from "../components/NotificationBell";
-import { useState, useEffect } from "react";
-import Sidebar from "../components/Sidebar";
-import SearchInput from "../components/SearchInput";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import AppLayout from "../components/AppLayout";
 import { getAuthHeader } from "../utils/auth";
 
 export default function Notifications() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [clearLoading, setClearLoading] = useState(false);
+  const [deletingIds, setDeletingIds] = useState(new Set());
 
-  // Fetch notifications on component mount
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const fetchNotifications = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications`,
-        {
-          headers: getAuthHeader()
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch notifications");
-      }
-
-      const data = await response.json();
+      const res = await fetch(`${apiBase}/api/notifications`, {
+        headers: getAuthHeader()
+      });
+      if (!res.ok) throw new Error("Failed to fetch notifications");
+      const data = await res.json();
       setNotifications(data.notifications || []);
+      setError(null);
     } catch (err) {
-      setError(err.message);
-      console.error("Error fetching notifications:", err);
+      console.error(err);
+      setError(err.message || "Failed to load notifications");
     } finally {
       setLoading(false);
     }
   };
 
-  const deleteNotification = async (id) => {
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const markAllAsRead = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications/${id}`,
-        {
-          method: "DELETE",
-          headers: getAuthHeader()
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete notification");
-      }
-
-      // Remove from local state
-      setNotifications(notifications.filter(n => n._id !== id));
+      await fetch(`${apiBase}/api/notifications/read-all`, {
+        method: "PATCH",
+        headers: getAuthHeader()
+      });
+      // refresh
+      await fetchNotifications();
+      // notify bell to refresh
+      window.dispatchEvent(new Event("notificationMarkedAsRead"));
     } catch (err) {
-      console.error("Error deleting notification:", err);
-      alert("Failed to delete notification");
-    }
-  };
-
-  const clearAllNotifications = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications/clear`,
-        {
-          method: "DELETE",
-          headers: getAuthHeader()
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to clear notifications");
-      }
-
-      setNotifications([]);
-    } catch (err) {
-      console.error("Error clearing notifications:", err);
-      alert("Failed to clear notifications");
+      console.error(err);
     }
   };
 
   const markAsRead = async (id) => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications/${id}/read`,
-        {
-          method: "PATCH",
-          headers: getAuthHeader()
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to mark as read");
-      }
-
-      // Update local state
-      setNotifications(notifications.map(n => 
-        n._id === id ? { ...n, isRead: true } : n
-      ));
+      await fetch(`${apiBase}/api/notifications/${id}/read`, {
+        method: "PATCH",
+        headers: getAuthHeader()
+      });
+      await fetchNotifications();
+      window.dispatchEvent(new Event("notificationMarkedAsRead"));
     } catch (err) {
-      console.error("Error marking notification as read:", err);
+      console.error(err);
     }
   };
 
-  const filteredNotifications = notifications.filter(
-    (notification) =>
-      notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      notification.message.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const deleteNotification = async (id) => {
+    if (!confirm("Delete this notification?")) return;
+    setDeletingIds(prev => new Set(prev).add(id));
+    try {
+      const res = await fetch(`${apiBase}/api/notifications/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeader()
+      });
+      if (!res.ok) {
+        const e = await res.json().catch(() => null);
+        throw new Error(e?.message || `Failed to delete (${res.status})`);
+      }
+      await fetchNotifications();
+      window.dispatchEvent(new Event("notificationUpdated"));
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to delete notification");
+    } finally {
+      setDeletingIds(prev => {
+        const copy = new Set(prev);
+        copy.delete(id);
+        return copy;
+      });
+    }
+  };
+
+  const clearAll = async () => {
+    if (!confirm("Clear all notifications? This cannot be undone.")) return;
+    setClearLoading(true);
+    try {
+      console.log("Clearing notifications...", { url: `${apiBase}/api/notifications/clear` });
+      const res = await fetch(`${apiBase}/api/notifications/clear`, {
+        method: "DELETE",
+        headers: { ...getAuthHeader(), "Content-Type": "application/json" }
+      });
+      const text = await res.text();
+      console.log("Clear response status", res.status, text);
+      if (!res.ok) {
+        // try to parse JSON message if possible
+        let parsed = null;
+        try { parsed = JSON.parse(text); } catch {
+          // ignore
+        }
+        throw new Error(parsed?.message || text || `Failed to clear (${res.status})`);
+      }
+      await fetchNotifications();
+      window.dispatchEvent(new Event("notificationUpdated"));
+      alert("All notifications cleared");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to clear notifications");
+    } finally {
+      setClearLoading(false);
+    }
+  };
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-bg-app)]">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar />
+    <AppLayout>
+      <div className="px-10 py-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Notifications</h1>
+            <p className="text-sm text-text-muted">Recent activity and alerts for your account</p>
+          </div>
+
+          <div />
+        </div>
       </div>
 
-      {/* Mobile Sidebar slide-in */}
-      {sidebarOpen && (
-        <div className="fixed inset-y-0 left-0 z-50 animate-slide-in">
-          <Sidebar onClose={() => setSidebarOpen(false)} />
-        </div>
-      )}
-
-      {/* Main Content */}
-      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
-        {/* Header */}
-        <div className="mb-6">
-          {/* Top Row */}
-          <div className="flex items-center justify-between gap-4">
-            {/* Mobile Hamburger */}
-            <button
-              className="md:hidden text-2xl text-[var(--color-text-main)]"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <FiMenu />
-            </button>
-
-            {/* Title */}
-            <div className="flex-1">
-              <h1 className="text-xl font-semibold">Notifications</h1>
-              <p className="text-sm text-[var(--color-text-muted)]">
-                Stay updated with your network
-              </p>
-            </div>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-4">
-              {/* Desktop Search */}
-              <div className="hidden md:block">
-                <form>
-                  <SearchInput
-                    placeholder="Search notifications..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    icon={<FiSearch />}
-                  />
-                </form>
-              </div>
-
-              <NotificationBell />
+      <div className="px-10 py-8 space-y-7">
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">All Notifications</h2>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={markAllAsRead}
+                className="px-3 py-1 bg-[var(--color-primary)] text-white rounded"
+              >
+                Mark all as read
+              </button>
+              <button
+                onClick={clearAll}
+                disabled={clearLoading}
+                className={`px-3 py-1 text-white rounded ${clearLoading ? 'bg-[var(--color-bg-input)] opacity-60 cursor-not-allowed' : 'bg-[var(--color-danger)]'}`}
+              >
+                {clearLoading ? 'Clearing...' : 'Clear all'}
+              </button>
             </div>
           </div>
 
-          {/* Mobile Search */}
-          <div className="md:hidden mt-4">
-            <form>
-              <SearchInput
-                placeholder="Search notifications..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                fullWidth
-                icon={<FiSearch />}
-              />
-            </form>
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="space-y-4">
-        {loading && <p className="text-center text-[var(--color-text-muted)]">Loading notifications...</p>}
-
-        {error && (
-          <p className="text-center text-red-600">Error: {error}</p>
-        )}
-
-        {!loading && !error && notifications.length === 0 && (
-          <p className="text-center text-[var(--color-text-muted)]">No notifications yet</p>
-        )}
-
-        {!loading && !error && filteredNotifications.length === 0 && searchTerm && (
-          <p className="text-center text-[var(--color-text-muted)]">No notifications match your search</p>
-        )}
-
-        {filteredNotifications.map((item) => (
-          <div
-            key={item._id}
-            onClick={() => !item.isRead && markAsRead(item._id)}
-            className={`
-              border rounded-lg
-              p-4
-              flex justify-between items-start
-              cursor-pointer
-              transition-all
-              ${item.isRead ? "bg-gray-100 border-gray-300" : "bg-blue-50 border-blue-200"}
-            `}
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-base">
-                  {item.title}
-                </h3>
-                {!item.isRead && (
-                  <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">New</span>
-                )}
-              </div>
-              <p className="text-gray-700 text-sm mt-1">
-                {item.message}
-              </p>
-              <p className="text-xs text-text-muted mt-2">
-                {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString()}
-              </p>
+          {loading ? (
+            <div className="flex items-center justify-center h-28">
+              <p className="text-text-muted">Loading notifications...</p>
             </div>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteNotification(item._id);
-              }}
-              className="
-                bg-red-500 hover:bg-red-600
-                text-white
-                px-4 py-2
-                rounded-lg
-                text-sm
-                whitespace-nowrap
-                ml-4
-                transition-colors
-              "
-            >
-              Delete
-            </button>
-          </div>
-        ))}
-
-        {!loading && !error && filteredNotifications.length > 0 && (
-          <button
-            onClick={clearAllNotifications}
-            className="
-              bg-gray-600 hover:bg-gray-700
-              text-white
-              px-6 py-2
-              rounded-lg
-              text-sm
-              mt-6
-              transition-colors
-            "
-          >
-            Clear All
-          </button>
-        )}
+          ) : error ? (
+            <div className="text-red-600">{error}</div>
+          ) : notifications.length === 0 ? (
+            <div className="text-text-muted">No notifications</div>
+          ) : (
+            <ul className="space-y-3">
+              {notifications.map((n) => (
+                <li
+                  key={n._id}
+                  className={`p-4 rounded border border-[var(--color-border)] ${n.isRead ? "bg-white" : "bg-[var(--color-bg-card)]"}`}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-sm text-text-main">{n.message || n.title}</div>
+                      <div className="text-xs text-text-muted">
+                        {formatDistanceToNow(new Date(n.createdAt || Date.now()), { addSuffix: true })}
+                      </div>
+                    </div>
+                    <div className="ml-4 flex items-center gap-2">
+                      {!n.isRead && (
+                        <button
+                          onClick={() => markAsRead(n._id)}
+                          className="text-sm text-[var(--color-primary)]"
+                        >
+                          Mark read
+                        </button>
+                      )}
+                      <button
+                        onClick={() => deleteNotification(n._id)}
+                        className="text-sm text-[var(--color-danger)]"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+    </AppLayout>
   );
 }

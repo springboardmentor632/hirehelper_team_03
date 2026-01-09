@@ -1,60 +1,136 @@
 import React, { useState } from "react";
- 
+import { FiCheck, FiX, FiAlertCircle, FiClock } from "react-icons/fi";
+
 export default function MyRequestCard({ request, onWithdraw }) {
   const [processing, setProcessing] = useState(false);
- 
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
+
   const handleWithdraw = async () => {
     if (!onWithdraw) return;
     setProcessing(true);
     try {
       await onWithdraw();
+      showToast("Request withdrawn successfully", "success");
     } catch (err) {
-      alert(err?.response?.data?.message || "Failed to withdraw");
+      const errorMsg = err?.response?.data?.message || "Failed to withdraw request";
+      showToast(errorMsg, "error");
     } finally {
       setProcessing(false);
     }
   };
- 
+
   const ownerName = request.taskOwner?.first_name
     ? `${request.taskOwner.first_name} ${request.taskOwner.last_name}`
     : typeof request.taskOwner === "string"
     ? request.taskOwner
     : "User";
- 
+
   const taskTitle = request.task?.title || request.task || "Task";
- 
+  const isPending = request.status === "pending";
+  const isAccepted = request.status === "accepted";
+  const isRejected = request.status === "rejected";
+
+  const formatTime = (date) => {
+    return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
-    <div className="bg-[var(--color-bg-card)] rounded-2xl shadow-card p-5 border border-gray-200 hover:shadow-lg transition-all">
-      <div className="flex justify-between items-start">
-        <div className="flex flex-col">
-          <h2 className="font-semibold text-lg">Sent To: {ownerName}</h2>
- 
-          <p className="text-xs text-text-muted mt-1">
-            Status: {request.status}
-          </p>
- 
-          {/* Message Section */}
- 
-          <p className="mt-2 break-words line-clamp-3 text-xs sm:text-sm lg:text-base text-text-main">
+    <>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+        {/* Header with Status Badge */}
+        <div className="relative p-5 pb-0">
+          <div className="flex justify-between items-start mb-3">
+            <h3 className="font-semibold text-lg text-[var(--color-text-main)]">
+              {ownerName}
+            </h3>
+            <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+              isAccepted 
+                ? "bg-green-100 text-green-700" 
+                : isRejected 
+                ? "bg-red-100 text-red-700"
+                : "bg-yellow-100 text-yellow-700"
+            }`}>
+              {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+            </span>
+          </div>
+
+          {/* Description/Message */}
+          <p className="text-sm text-[var(--color-text-main)] mb-3 line-clamp-2">
             {request.text ? request.text : "You requested help for this task."}
           </p>
+
+          {/* Task Title */}
+          <p className="text-xs text-[var(--color-text-muted)] mb-1">
+            Requesting for:
+          </p>
+          <p className="text-sm font-medium text-[var(--color-text-main)] mb-3">
+            {taskTitle}
+          </p>
+
+          {/* Meta Info */}
+          <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)] py-3 border-t border-gray-100">
+            <div className="flex items-center gap-1">
+              <FiClock size={14} />
+              <span>{formatTime(request.createdAt)}</span>
+            </div>
+            <div>
+              {new Date(request.createdAt).toLocaleDateString()}
+            </div>
+          </div>
         </div>
- 
-        <button
-          onClick={handleWithdraw}
-          disabled={processing}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg disabled:opacity-60"
-        >
-          {processing ? "Withdrawing..." : "Withdraw"}
-        </button>
+
+        {/* Action Button */}
+        <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
+          {isPending && (
+            <button
+              onClick={handleWithdraw}
+              disabled={processing}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-white px-3 py-2 rounded-lg font-medium transition-colors text-sm flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+            >
+              {processing ? (
+                <>
+                  <span className="inline-block animate-spin">⏳</span>
+                  Withdrawing...
+                </>
+              ) : (
+                <>
+                  <FiX size={16} />
+                  Withdraw
+                </>
+              )}
+            </button>
+          )}
+          {isAccepted && (
+            <div className="py-2 rounded-lg font-medium text-white text-center text-sm bg-green-500">
+              ✓ Accepted
+            </div>
+          )}
+          {isRejected && (
+            <div className="py-2 rounded-lg font-medium text-white text-center text-sm bg-red-500">
+              ✗ Declined
+            </div>
+          )}
+        </div>
       </div>
- 
-      <div className="mt-4 text-xs text-text-muted flex items-center gap-2">
-        <span>Requesting for:</span>
-        <span className="px-3 py-1 rounded-lg bg-[var(--color-bg-input)] w-fit">
-          {taskTitle}
-        </span>
-      </div>
-    </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg text-white font-medium shadow-lg animate-fade-in flex items-center gap-2 z-50 ${
+          toast.type === "success" ? "bg-green-500" : "bg-red-500"
+        }`}>
+          {toast.type === "success" ? (
+            <FiCheck size={20} />
+          ) : (
+            <FiAlertCircle size={20} />
+          )}
+          {toast.message}
+        </div>
+      )}
+    </>
   );
 }
