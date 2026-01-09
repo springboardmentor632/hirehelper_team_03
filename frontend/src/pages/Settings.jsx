@@ -71,6 +71,8 @@ export default function Settings() {
   const [savingProfile, setSavingProfile] = useState(false);
   const prevObjectUrlRef = React.useRef(null);
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   React.useEffect(() => {
     return () => {
       if (prevObjectUrlRef.current) {
@@ -79,6 +81,14 @@ export default function Settings() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setShowLogoutConfirm(false);
+    };
+    if (showLogoutConfirm) document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [showLogoutConfirm]);
 
   const saveUserToStorage = (userObj) => {
     if (localStorage.getItem('user')) {
@@ -390,7 +400,7 @@ export default function Settings() {
             <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">Privacy Policy</button>
             <div className="flex-1" />
             <button
-              onClick={handleLogout}
+              onClick={() => setShowLogoutConfirm(true)}
               className="bg-red-500 text-white px-6 py-2 rounded-full"
             >
               Logout
@@ -398,6 +408,34 @@ export default function Settings() {
           </div>
         </div>
       </div>
+
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowLogoutConfirm(false)}
+          />
+          <div className="relative bg-[var(--color-bg-card)] text-text-main p-6 rounded-lg z-10">
+            <h3 className="font-semibold mb-2">Confirm Logout</h3>
+            <p className="mb-4">Are you sure you want to logout</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="bg-[var(--color-primary)] px-4 py-2 text-white rounded"
+              >
+                Stay
+              </button>
+              <button
+                onClick={() => { setShowLogoutConfirm(false); handleLogout(); }}
+                className="bg-[var(--color-danger)] px-4 py-2 text-white rounded"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </AppLayout>
   );
 }

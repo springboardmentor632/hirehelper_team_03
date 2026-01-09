@@ -46,6 +46,31 @@ export default function Login() {
         sessionStorage.setItem("user", JSON.stringify(res.data.user));
       }
 
+      // Notify other components (Sidebar) about the updated user
+      window.dispatchEvent(new CustomEvent('user:update', { detail: res.data.user }));
+
+      // Attempt to fetch the latest user profile (may include updated profile_picture)
+      try {
+        const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const profileRes = await fetch(`${apiBase}/api/users/me`, {
+          headers: { Authorization: `Bearer ${res.data.token}` },
+        });
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          const latestUser = profileData.user || profileData;
+          if (rememberMe) {
+            localStorage.setItem("user", JSON.stringify(latestUser));
+          } else {
+            sessionStorage.setItem("user", JSON.stringify(latestUser));
+          }
+          // Ensure sidebar and other components get the latest user
+          window.dispatchEvent(new CustomEvent('user:update', { detail: latestUser }));
+        }
+      } catch (err) {
+        // ignore; login already succeeded
+        console.error('Failed fetching latest profile after login:', err);
+      }
+
       navigate("/", { replace: true });
     } catch (err) {
       if (err.response) {
