@@ -14,6 +14,7 @@ export default function Requests() {
   const [searchTerm, setSearchTerm] = useState("");
   const [actionId, setActionId] = useState(null);
 
+  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:5000";
   const getToken = () =>
     localStorage.getItem("token") || sessionStorage.getItem("token");
 
@@ -22,7 +23,7 @@ export default function Requests() {
       setLoading(true);
       setError("");
       const res = await axios.get(
-        "http://localhost:5000/api/requests/received",
+        `${apiBase}/api/requests/received`,
         { headers: { Authorization: `Bearer ${getToken()}` } }
       );
       setRequests(res.data.requests || []);
@@ -38,12 +39,19 @@ export default function Requests() {
 
     try {
       setActionId(id);
-      await axios.delete(`http://localhost:5000/api/requests/${id}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-      setRequests((prev) => prev.filter((r) => r._id !== id));
+      const res = await axios.put(
+        `${apiBase}/api/requests/${id}/reject`,
+        null,
+        { headers: { Authorization: `Bearer ${getToken()}` } }
+      );
+      const updated = res.data.request;
+      setRequests((prev) =>
+        prev.map((r) => (r._id === id ? updated : r))
+      );
       window.dispatchEvent(
-        new CustomEvent("requestUpdated", { detail: { id, action: "deleted" } })
+        new CustomEvent("requestUpdated", {
+          detail: { id, action: "rejected", request: updated },
+        })
       );
       window.dispatchEvent(new CustomEvent("notificationUpdated"));
     } catch (err) {
@@ -57,7 +65,7 @@ export default function Requests() {
     try {
       setActionId(id);
       const res = await axios.put(
-        `http://localhost:5000/api/requests/${id}/accept`,
+        `${apiBase}/api/requests/${id}/accept`,
         null,
         { headers: { Authorization: `Bearer ${getToken()}` } }
       );

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import AppLayout from "../components/AppLayout";
+import Sidebar from "../components/Sidebar";
 import { getAuthHeader } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
-import { FiChevronRight } from "react-icons/fi";
+import { FiChevronRight, FiMenu } from "react-icons/fi";
 import NotificationBell from "../components/NotificationBell";
 import { useToast } from "../components/Toast";
 
 export default function Settings() {
   const navigate = useNavigate();
   const toast = useToast();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -214,27 +215,59 @@ export default function Settings() {
   };
 
   return (
-    <AppLayout>
-      <div className="px-10 py-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Settings</h1>
-            <p className="text-sm text-text-muted">These Settings appear in your user</p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <NotificationBell />
-          </div>
-        </div>
+    <div className="min-h-screen w-full bg-[var(--color-bg-app)] flex overflow-hidden">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block md:sticky md:top-0 md:h-screen md:flex-none">
+        <Sidebar />
       </div>
 
-      <div className="px-10 py-8 space-y-7">
+      {/* Mobile Sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar slide-in */}
+      {sidebarOpen && (
+        <div className="fixed inset-y-0 left-0 z-50 animate-slide-in">
+          <Sidebar onClose={() => setSidebarOpen(false)} />
+        </div>
+      )}
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto max-h-screen">
+        <div className="p-4 md:p-6 lg:px-10 lg:py-6">
+          <div className="flex items-center justify-between gap-4 mb-4">
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden text-2xl text-[var(--color-text-main)]"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <FiMenu />
+            </button>
+
+            {/* Title */}
+            <div className="flex-1">
+              <h1 className="text-xl md:text-2xl font-bold">Settings</h1>
+              <p className="text-xs md:text-sm text-text-muted">These Settings appear in your user</p>
+            </div>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-4">
+              <NotificationBell />
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 md:p-6 lg:px-10 lg:py-8 space-y-7">
         {/* PROFILE */}
-        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-4 md:p-6 bg-[var(--color-bg-app)]">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-semibold text-lg">Profile</h2>
-              <p className="text-sm text-text-muted">Manage your account details</p>
+              <h2 className="font-semibold text-base md:text-lg">Profile</h2>
+              <p className="text-xs md:text-sm text-text-muted">Manage your account details</p>
             </div>
           </div>
 
@@ -254,7 +287,7 @@ export default function Settings() {
                       : ""
                   }
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="border-[var(--color-border)] bg-[var(--color-bg-input)] rounded px-3 py-2 text-text-main"
+                  className="border-[var(--color-border)] bg-[var(--color-bg-input)] rounded px-3 py-2 text-text-main w-full"
                   placeholder="Your display name"
                 />
 
@@ -266,21 +299,21 @@ export default function Settings() {
                       : user?.phone_number || user?.phone || ""
                   }
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="border-[var(--color-border)] bg-[var(--color-bg-input)] rounded px-3 py-2 text-text-main"
+                  className="border-[var(--color-border)] bg-[var(--color-bg-input)] rounded px-3 py-2 text-text-main w-full"
                   placeholder="Your phone number"
                 />
               </div>
 
               <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex flex-col gap-3 items-center">
                 <p className="text-xs text-text-muted">Profile Photo</p>
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-[var(--color-bg-input)]">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-[var(--color-bg-input)]">
                   <img
                     src={previewImage || user?.profile_picture}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <label className="mt-2 inline-flex items-center gap-2 cursor-pointer bg-[var(--color-bg-input)] px-3 py-2 rounded">
+                <label className="mt-2 inline-flex items-center gap-2 cursor-pointer bg-[var(--color-bg-input)] px-3 py-2 rounded text-sm">
                   <input
                     type="file"
                     accept="image/*"
@@ -299,20 +332,20 @@ export default function Settings() {
                       }
                       setPreviewImage(null);
                     }}
-                    className="text-sm text-[var(--color-danger)]"
+                    className="text-xs md:text-sm text-[var(--color-danger)]"
                   >
                     Remove
                   </button>
                 )}
                 <p className="text-xs text-text-muted">Email</p>
-                <p className="font-medium">{user?.email_id || user?.email || "—"}</p>
+                <p className="font-medium text-sm md:text-base break-all">{user?.email_id || user?.email || "—"}</p>
               </div>
 
               <div className="md:col-span-3 flex justify-end mt-2">
                 <button
                   onClick={handleSaveProfile}
                   disabled={savingProfile}
-                  className={`bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-full ${savingProfile ? 'opacity-60 cursor-not-allowed' : ''}`} 
+                  className={`bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white px-4 py-2 rounded-full text-sm md:text-base ${savingProfile ? 'opacity-60 cursor-not-allowed' : ''}`} 
                 >
                   {savingProfile ? 'Saving...' : 'Save Profile'}
                 </button>
@@ -322,8 +355,8 @@ export default function Settings() {
         </div>
 
         {/* APP SETTINGS */}
-        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
-          <h2 className="font-semibold text-lg">App Settings</h2>
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-4 md:p-6 bg-[var(--color-bg-app)]">
+          <h2 className="font-semibold text-base md:text-lg">App Settings</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
             <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card border border-[var(--color-border)] flex items-center justify-between text-text-main">
               <div>
@@ -384,17 +417,17 @@ export default function Settings() {
         </div>
 
         {/* HELP */}
-        <div className="rounded-2xl border-2 border-[var(--color-border)] p-6 bg-[var(--color-bg-app)]">
-          <h2 className="font-semibold text-lg">Help</h2>
+        <div className="rounded-2xl border-2 border-[var(--color-border)] p-4 md:p-6 bg-[var(--color-bg-app)]">
+          <h2 className="font-semibold text-base md:text-lg">Help</h2>
 
-          <div className="flex gap-4 mt-6 flex-wrap">
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">FAQ</button>
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">Terms & condition</button>
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main">Privacy Policy</button>
-            <div className="flex-1" />
+          <div className="flex flex-col sm:flex-row gap-4 mt-6 flex-wrap">
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base">FAQ</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base">Terms & condition</button>
+            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base">Privacy Policy</button>
+            <div className="flex-1 hidden sm:block" />
             <button
               onClick={() => setShowLogoutConfirm(true)}
-              className="bg-red-500 text-white px-6 py-2 rounded-full"
+              className="bg-red-500 text-white px-4 md:px-6 py-2 rounded-full text-sm md:text-base w-full sm:w-auto"
             >
               Logout
             </button>
@@ -403,24 +436,24 @@ export default function Settings() {
       </div>
 
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setShowLogoutConfirm(false)}
           />
-          <div className="relative bg-[var(--color-bg-card)] text-text-main p-6 rounded-lg z-10">
-            <h3 className="font-semibold mb-2">Confirm Logout</h3>
-            <p className="mb-4">Are you sure you want to logout</p>
-            <div className="flex justify-end gap-3">
+          <div className="relative bg-[var(--color-bg-card)] text-text-main p-4 md:p-6 rounded-lg z-10 w-full max-w-md">
+            <h3 className="font-semibold mb-2 text-base md:text-lg">Confirm Logout</h3>
+            <p className="mb-4 text-sm md:text-base">Are you sure you want to logout</p>
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="bg-[var(--color-primary)] px-4 py-2 text-white rounded"
+                className="bg-[var(--color-primary)] px-4 py-2 text-white rounded text-sm md:text-base"
               >
                 Stay
               </button>
               <button
                 onClick={() => { setShowLogoutConfirm(false); handleLogout(); }}
-                className="bg-[var(--color-danger)] px-4 py-2 text-white rounded"
+                className="bg-[var(--color-danger)] px-4 py-2 text-white rounded text-sm md:text-base"
               >
                 Logout
               </button>
@@ -428,7 +461,7 @@ export default function Settings() {
           </div>
         </div>
       )}
-
-    </AppLayout>
+      </main>
+    </div>
   );
 }

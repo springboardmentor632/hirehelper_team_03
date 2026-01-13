@@ -16,7 +16,7 @@ export default function RequestCard({ request, onDecline, onAccept }) {
     setProcessing(true);
     try {
       await onDecline();
-      showToast("Request declined successfully", "success");
+      showToast("Request declined! Notification sent to the requester", "success");
     } catch (err) {
       const errorMsg = err?.response?.data?.message || "Failed to decline request";
       showToast(errorMsg, "error");

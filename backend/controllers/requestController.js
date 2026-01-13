@@ -133,21 +133,23 @@ export const rejectRequest = async (req, res) => {
     request.status = "rejected";
     await request.save();
 
+    const updated = await Request.findById(request._id).populate("task");
+
     // Log and create notification for the requester
     try {
-      console.log('Creating REQUEST_REJECTED notification for user', request.requester?.toString(), { taskId: request.task, requestId: request._id });
+      console.log('Creating REQUEST_REJECTED notification for user', request.requester?.toString(), { taskTitle: updated?.task?.title, taskId: updated?.task?._id, requestId: request._id });
       await createNotification(
         request.requester.toString(),
         "REQUEST_REJECTED",
         "Request Rejected",
-        "Your request was rejected",
-        { taskId: request.task, requestId: request._id }
+        `Your request for "${updated.task?.title || 'task'}" was rejected`,
+        { taskId: updated.task?._id, requestId: request._id }
       );
     } catch (notifErr) {
       console.error('Error creating reject notification:', notifErr);
     }
 
-    res.status(200).json({ message: "Request rejected" });
+    res.status(200).json({ message: "Request rejected", request: updated });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
