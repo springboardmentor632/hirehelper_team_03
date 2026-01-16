@@ -1,13 +1,15 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { getAuthHeader } from "../utils/auth";
 import { FiMenu, FiUpload, FiCalendar, FiClock } from "react-icons/fi";
 import NotificationBell from "../components/NotificationBell";
+import { useToast } from "../components/Toast";
 
 export default function AddTask() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Form state
@@ -20,6 +22,43 @@ export default function AddTask() {
   const [endTime, setEndTime] = useState("");
   const [category, setCategory] = useState("");
   const [picture, setPicture] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  // Get today's date and current time in the correct format
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  // Calculate minimum values for date/time inputs
+  const getMinStartDate = () => getTodayDate();
+  const getMinStartTime = () => {
+    if (startDate === getTodayDate()) {
+      return getCurrentTime();
+    }
+    return "00:00";
+  };
+
+  const getMinEndDate = () => {
+    if (startDate) {
+      return startDate;
+    }
+    return getTodayDate();
+  };
+
+  const getMinEndTime = () => {
+    if (endDate === startDate && startTime) {
+      return startTime;
+    }
+    return "00:00";
+  };
 
   const categories = [
     "AC Repair",
@@ -32,8 +71,66 @@ export default function AddTask() {
     "Appliance Repair",
   ];
 
+  // Validate date/time inputs
+  const validateDateTime = () => {
+    const newErrors = {};
+    const today = getTodayDate();
+    const currentTime = getCurrentTime();
+
+    // Validate start date is today or later
+    if (startDate && startDate < today) {
+      newErrors.startDate = "Start date must be today or later";
+    }
+
+    // Validate start time if start date is today
+    if (startDate === today && startTime) {
+      if (startTime < currentTime) {
+        newErrors.startTime = "Start time must be current time or later";
+      }
+    }
+
+    // Validate end date/time is after start date/time
+    if (startDate && endDate) {
+      if (endDate < startDate) {
+        newErrors.endDate = "End date must be on or after start date";
+      } else if (endDate === startDate && startTime && endTime) {
+        if (endTime <= startTime) {
+          newErrors.endTime = "End time must be after start time";
+        }
+      }
+    }
+
+    if (startDate && endDate && startTime && !endTime) {
+      newErrors.endTime = "End time is required when end date is set";
+    }
+
+    if (startDate && endDate && !startTime && endTime) {
+      newErrors.startTime = "Start time is required when end time is set";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Reset end date/time if it becomes invalid when start date/time changes
+  useEffect(() => {
+    if (startDate && endDate && endDate < startDate) {
+      setEndDate("");
+      setEndTime("");
+    }
+    if (startDate && endDate === startDate && startTime && endTime && endTime <= startTime) {
+      setEndTime("");
+    }
+  }, [startDate, startTime]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate before submitting
+    if (!validateDateTime()) {
+      toast.error("Please fix the validation errors before submitting.");
+      return;
+    }
 
     try {
       const formData = new FormData();
@@ -57,7 +154,7 @@ export default function AddTask() {
       );
 
       console.log("Task added:", response.data);
-      alert("Task added successfully!");
+      toast.success("Task added successfully!");
 
       // Clear form
       setTitle("");
@@ -69,9 +166,10 @@ export default function AddTask() {
       setEndTime("");
       setCategory("");
       setPicture(null);
+      setErrors({});
     } catch (error) {
       console.error("Error adding task:", error);
-      alert(error.response?.data?.message || "Failed to add task.");
+      toast.error(error.response?.data?.message || "Failed to add task.");
     }
   };
 
@@ -151,41 +249,82 @@ export default function AddTask() {
               {/* Dates & Time */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Field label="Start Date">
-                  <IconInput
-                    icon={<FiCalendar />}
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    required
-                  />
+                  <div>
+                    <IconInput
+                      icon={<FiCalendar />}
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => {
+                        setStartDate(e.target.value);
+                        setErrors({ ...errors, startDate: "" });
+                      }}
+                      min={getMinStartDate()}
+                      required
+                    />
+                    {errors.startDate && (
+                      <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>
+                    )}
+                  </div>
                 </Field>
 
                 <Field label="Start Time">
-                  <IconInput
-                    icon={<FiClock />}
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    required
-                  />
+                  <div>
+                    <IconInput
+                      icon={<FiClock />}
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => {
+                        setStartTime(e.target.value);
+                        setErrors({ ...errors, startTime: "" });
+                      }}
+                      min={getMinStartTime()}
+                      required
+                    />
+                    {errors.startTime && (
+                      <p className="text-red-500 text-xs mt-1">{errors.startTime}</p>
+                    )}
+                  </div>
                 </Field>
 
                 <Field label="End Date">
-                  <IconInput
-                    icon={<FiCalendar />}
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
+                  <div>
+                    <IconInput
+                      icon={<FiCalendar />}
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => {
+                        setEndDate(e.target.value);
+                        setErrors({ ...errors, endDate: "" });
+                        // Clear end time if end date is cleared
+                        if (!e.target.value) {
+                          setEndTime("");
+                        }
+                      }}
+                      min={getMinEndDate()}
+                    />
+                    {errors.endDate && (
+                      <p className="text-red-500 text-xs mt-1">{errors.endDate}</p>
+                    )}
+                  </div>
                 </Field>
 
                 <Field label="End Time">
-                  <IconInput
-                    icon={<FiClock />}
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                  />
+                  <div>
+                    <IconInput
+                      icon={<FiClock />}
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => {
+                        setEndTime(e.target.value);
+                        setErrors({ ...errors, endTime: "" });
+                      }}
+                      min={getMinEndTime()}
+                      disabled={!endDate}
+                    />
+                    {errors.endTime && (
+                      <p className="text-red-500 text-xs mt-1">{errors.endTime}</p>
+                    )}
+                  </div>
                 </Field>
               </div>
 
@@ -261,12 +400,12 @@ function Textarea(props) {
   return <textarea {...props} rows="3" className="input resize-none" />;
 }
 
-function IconInput({ icon, type, value, onChange }) {
+function IconInput({ icon, type, value, onChange, min, disabled, ...props }) {
   const inputRef = useRef(null);
 
   const handleIconClick = () => {
     const el = inputRef.current;
-    if (!el) return;
+    if (!el || disabled) return;
     // Modern browsers expose showPicker() for date/time inputs
     if (typeof el.showPicker === "function") {
       try {
@@ -290,18 +429,21 @@ function IconInput({ icon, type, value, onChange }) {
       <input
         ref={inputRef}
         type={type}
-        className="input pr-10"
+        className={`input pr-10 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         value={value}
         onChange={onChange}
+        min={min}
+        disabled={disabled}
+        {...props}
       />
       <div
         onClick={handleIconClick}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted cursor-pointer select-none"
+        className={`absolute right-3 top-1/2 -translate-y-1/2 text-text-muted ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} select-none`}
         role="button"
         aria-label={type === "date" ? "Open date picker" : "Open time picker"}
-        tabIndex={0}
+        tabIndex={disabled ? -1 : 0}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") handleIconClick();
+          if ((e.key === "Enter" || e.key === " ") && !disabled) handleIconClick();
         }}
       >
         {icon}

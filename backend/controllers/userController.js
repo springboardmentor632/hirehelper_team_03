@@ -294,7 +294,7 @@ export const updateMe = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const { display_name, first_name, last_name } = req.body;
+    const { display_name, first_name, last_name, phone_number } = req.body;
 
     if (display_name) {
       const parts = String(display_name).trim().split(/\s+/);
@@ -303,6 +303,19 @@ export const updateMe = async (req, res) => {
     } else {
       if (first_name) user.first_name = first_name;
       if (last_name) user.last_name = last_name;
+    }
+
+    // Update phone number if provided
+    if (phone_number) {
+      // Check if phone number is already taken by another user
+      const existingUser = await User.findOne({ 
+        phone_number: phone_number.trim(),
+        _id: { $ne: req.user.id }
+      });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Phone number already in use' });
+      }
+      user.phone_number = phone_number.trim();
     }
 
     // If profile picture uploaded, push to cloudinary and set

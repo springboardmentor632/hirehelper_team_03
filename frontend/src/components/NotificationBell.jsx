@@ -1,52 +1,80 @@
 import { FiBell } from "react-icons/fi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuthHeader } from "../utils/auth";
 
 export default function NotificationBell() {
   const navigate = useNavigate();
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [newCount, setNewCount] = useState(0);
+  const [isBlinking, setIsBlinking] = useState(false);
 
-  const fetchUnreadCount = async () => {
+  const seenIdsRef = useRef(new Set());
+
+  const fetchNotifications = async () => {
     try {
-      const response = await fetch(
+      const res = await fetch(
         `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/notifications`,
-        {
-          headers: getAuthHeader()
-        }
+        { headers: getAuthHeader() }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        const unread = data.notifications?.filter(n => !n.isRead).length || 0;
-        setUnreadCount(unread);
+      if (!res.ok) return;
+
+      const data = await res.json();
+      const unread = (data.notifications || []).filter(n => !n.isRead);
+
+      const newUnread = unread.filter(n => !seenIdsRef.current.has(n._id));
+
+      if (newUnread.length > 0) {
+        setIsBlinking(true);
+        setTimeout(() => setIsBlinking(false), 5000);
       }
-    } catch (error) {
-      console.error("Error fetching unread count:", error);
+
+      newUnread.forEach(n => seenIdsRef.current.add(n._id));
+      // show current unread count (not cumulative seen count)
+      setNewCount(unread.length);
+    } catch (err) {
+      console.error("Notification fetch error:", err);
     }
   };
 
   useEffect(() => {
-    (async () => {
-      await fetchUnreadCount();
-    })();
-    // Poll for new notifications every 10 seconds
-    const interval = setInterval(fetchUnreadCount, 10000);
-    return () => clearInterval(interval);
+    const timer = setTimeout(() => {
+      fetchNotifications();
+    }, 0);
+
+    const interval = setInterval(fetchNotifications, 5000);
+
+    window.addEventListener("notificationUpdated", fetchNotifications);
+    window.addEventListener("notificationMarkedAsRead", fetchNotifications);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+      window.removeEventListener("notificationUpdated", fetchNotifications);
+      window.removeEventListener("notificationMarkedAsRead", fetchNotifications);
+    };
   }, []);
+
+  const openNotifications = () => {
+    navigate("/notifications");
+    setIsBlinking(false);
+    setNewCount(0);
+    seenIdsRef.current.clear();
+  };
 
   return (
     <button
-      onClick={() => navigate("/notifications")}
-      className={`relative p-3 text-xl cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors ${
-        unreadCount > 0 ? "bell-blink" : ""
+      onClick={openNotifications}
+      className={`relative p-3 text-xl ${
+        isBlinking ? "bell-blink" : ""
       }`}
-      title="View notifications"
     >
       <FiBell />
-      {unreadCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-          {unreadCount > 9 ? "9+" : unreadCount}
+      {newCount > 0 && (
+        <span className={`absolute -top-1 -right-1 bg-red-600 text-white
+          text-xs w-5 h-5 rounded-full flex items-center justify-center
+          ${isBlinking ? "badge-pulse" : ""}`}>
+          {newCount > 9 ? "9+" : newCount}
         </span>
       )}
     </button>

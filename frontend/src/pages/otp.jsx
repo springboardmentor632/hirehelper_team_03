@@ -10,8 +10,10 @@ import {
   FaChartBar,
   FaBriefcase,
 } from "react-icons/fa";
+import { useToast } from "../components/Toast";
 
 export default function OTPVerification() {
+  const toast = useToast();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Empty OTP
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [resendTimer, setResendTimer] = useState(600);
@@ -65,14 +67,14 @@ export default function OTPVerification() {
     e.preventDefault();
     const otpString = otp.join("");
     if (otpString.length !== 6) {
-      alert("Please enter a 6-digit OTP");
+      toast.error("Please enter a 6-digit OTP");
       return;
     }
 
     try {
       const userId = localStorage.getItem("userId");
       if (!userId) {
-        alert("User not found. Please register first.");
+        toast.error("User not found. Please register first.");
         navigate("/register"); // Redirect to registration page
         return;
       }
@@ -82,7 +84,7 @@ export default function OTPVerification() {
         otp: otpString,
       });
 
-      alert(res.data.message || "OTP verified successfully");
+      toast.success(res.data.message || "OTP verified successfully");
 
       // Clear localStorage and redirect to login
       localStorage.removeItem("userId");
@@ -92,7 +94,7 @@ export default function OTPVerification() {
       const message =
         error.response?.data?.message ||
         "OTP verification failed. Please try again.";
-      alert(message);
+      toast.error(message);
     }
   };
 
@@ -103,7 +105,7 @@ export default function OTPVerification() {
     try {
       const email = localStorage.getItem("email");
       if (!email) {
-        alert("Email not found. Please signup again.");
+        toast.error("Email not found. Please signup again.");
         return;
       }
 
@@ -112,8 +114,8 @@ export default function OTPVerification() {
       });
 
       setOtp(["", "", "", "", "", ""]);
-      // Show backend message in alert
-      alert(res.data.message || "New OTP sent to your email!");
+      // Show backend message in toast
+      toast.success(res.data.message || "New OTP sent to your email!");
 
       // Start timer
       setIsResendDisabled(true);
@@ -122,7 +124,7 @@ export default function OTPVerification() {
       const message =
         error.response?.data?.message ||
         "Failed to resend OTP. Please try again.";
-      alert(message);
+      toast.error(message);
     }
   };
 

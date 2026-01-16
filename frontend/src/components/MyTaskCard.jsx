@@ -1,6 +1,6 @@
 import { FiMapPin, FiClock, FiUser } from "react-icons/fi";
  
-export default function MyTaskCard({ task }) {
+export default function MyTaskCard({ task, onDelete, isDeleting = false }) {
   const {
     title,
     description,
@@ -9,7 +9,8 @@ export default function MyTaskCard({ task }) {
     start_time,
     end_time,
     status,
-    picture
+    picture,
+    _id,
   } = task;
  
   // convert ISO datetime to readable time (HH:MM)
@@ -19,24 +20,41 @@ export default function MyTaskCard({ task }) {
     return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
  
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+ 
+    // Simple confirmation alert
+    const isConfirmed = window.confirm(
+      `Are you sure you want to delete "${title}"?`
+    );
+ 
+    if (isConfirmed) {
+      onDelete(_id);
+    }
+  };
+ 
   return (
     <div
-      className="
+      className={`
         bg-[var(--color-bg-card)]
         rounded-card
         shadow-card
         p-4
         w-full
         max-w-sm
-      "
+        flex flex-col
+        ${isDeleting ? "opacity-50" : ""}
+      `}
     >
       {/* Show image only if exists in database */}
       {picture && (
-        <img
-          src={picture}
-          alt="Task"
-          className="w-full h-40 object-cover rounded-card"
-        />
+        <div className="relative mb-3">
+          <img
+            src={picture}
+            alt="Task"
+            className="w-full h-40 object-cover rounded-card"
+          />
+        </div>
       )}
  
       {/* Category + Status */}
@@ -48,7 +66,7 @@ export default function MyTaskCard({ task }) {
         )}
  
         <span
-          className="
+            className="
             ml-auto
             text-xs
             px-2 py-0.5
@@ -65,12 +83,10 @@ export default function MyTaskCard({ task }) {
       <h3 className="font-semibold mb-1">{title}</h3>
  
       {/* Description */}
-      <p className="text-xs text-text-muted mb-3">
-        {description}
-      </p>
+      <p className="text-xs text-text-muted mb-3">{description}</p>
  
       {/* Location & Time */}
-      <div className="text-xs text-text-muted mb-3 space-y-1">
+      <div className="text-xs text-text-muted space-y-1">
         <p className="flex items-center gap-1">
           <FiMapPin /> {location}
         </p>
@@ -79,11 +95,28 @@ export default function MyTaskCard({ task }) {
         </p>
       </div>
  
-      {/* Footer */}
-      <div className="flex items-center gap-2 text-xs">
-        <FiUser />
-        <span>You</span>
+      {/* Delete button at bottom */}
+      {/* Delete button container */}
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={handleDeleteClick}
+          disabled={isDeleting}
+          className="
+      px-3 py-1
+      text-xs
+      bg-red-500
+      text-white
+      rounded
+      hover:bg-red-600
+      transition-colors
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+    "
+        >
+          {isDeleting ? "Deleting..." : "Delete"}
+        </button>
       </div>
     </div>
   );
 }
+ 

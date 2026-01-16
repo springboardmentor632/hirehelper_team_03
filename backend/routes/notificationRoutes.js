@@ -1,17 +1,20 @@
 import express from "express";
+import auth from "../middleware/auth.js";
 import {
   getMyNotifications,
   markAsRead,
+  markAllAsRead,
   deleteNotification,
   clearAllNotifications
 } from "../controllers/notificationController.js";
-import authMiddleware from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getMyNotifications);
-router.patch("/:id/read", authMiddleware, markAsRead);
-router.delete("/clear", authMiddleware, clearAllNotifications);
-router.delete("/:id", authMiddleware, deleteNotification);
+router.get("/", auth, getMyNotifications);
+router.patch("/:id/read", auth, markAsRead);
+router.patch("/read-all", auth, markAllAsRead); // 🔥 REQUIRED
+// place specific path before parameterized ones so 'clear' isn't treated as an id
+router.delete("/clear", auth, clearAllNotifications);
+router.delete("/:id", auth, deleteNotification);
 
 export default router;

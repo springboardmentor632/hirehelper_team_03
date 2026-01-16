@@ -7,15 +7,15 @@ import {
   rejectRequest,
   deleteRequest
 } from "../controllers/requestController.js";
-import  protect  from "../middleware/auth.js";
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/", protect, sendRequest);
-router.get("/received", protect, getReceivedRequests);
-router.get("/sent", protect, getSentRequests);
-router.put("/:id/accept", protect, acceptRequest);
-router.put("/:id/reject", protect, rejectRequest);
-router.delete("/:id", protect, deleteRequest);
+router.post("/", auth, sendRequest);
+router.get("/received", auth, getReceivedRequests);
+router.get("/sent", auth, getSentRequests);
+router.put("/:id/accept", auth, acceptRequest);
+router.put("/:id/reject", auth, rejectRequest);
+router.delete("/:id", auth, deleteRequest);
 
 export default router;

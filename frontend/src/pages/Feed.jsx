@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -73,6 +74,19 @@ export default function Feed() {
  
   useEffect(() => {
     fetchFeedTasks();
+  }, []);
+
+  // Listen for request updates to refresh feed
+  useEffect(() => {
+    const handleRequestUpdate = () => {
+      // Refresh feed when a request is accepted
+      fetchFeedTasks();
+    };
+
+    window.addEventListener('requestUpdated', handleRequestUpdate);
+    return () => {
+      window.removeEventListener('requestUpdated', handleRequestUpdate);
+    };
   }, []);
  
   const handleSearchChange = (value) => {
