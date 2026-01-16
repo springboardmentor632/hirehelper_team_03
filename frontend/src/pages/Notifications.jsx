@@ -203,7 +203,7 @@ export default function Notifications() {
               {notifications.map((n) => (
                 <li
                   key={n._id}
-                  className={`p-3 md:p-4 rounded border border-[var(--color-border)] ${n.isRead ? "bg-white" : "bg-[var(--color-bg-card)]"}`}
+                  className={`p-3 md:p-4 rounded border border-[var(--color-border)] ${n.isRead ? "bg-[var(--color-bg-app)]" : "bg-[var(--color-bg-card)]"}`}
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4">
                     <div className="flex-1 min-w-0">
