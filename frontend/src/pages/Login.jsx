@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
+import Footer from "../components/Footer";
 import axios from "axios";
 
 export default function Login() {
@@ -86,11 +87,11 @@ export default function Login() {
   };
 
   return (
-    <div className="relative h-screen max-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
+    <div className="relative min-h-screen bg-[var(--color-bg-app)] flex flex-col">
       <AuthBackground />
 
       {/* Main container - Responsive for all sizes */}
-      <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
+      <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6 flex-1 flex items-center justify-center">
         {/* Form card */}
         <div className="block md:hidden w-full text-center mb-4">
           <h1 className="text-lg sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight">
@@ -202,6 +203,7 @@ export default function Login() {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

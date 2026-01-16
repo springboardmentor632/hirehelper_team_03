@@ -11,6 +11,9 @@ import MyRequests from "./pages/MyRequests";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import ErrorPage from "./pages/ErrorPage";
+import FAQ from "./pages/FAQ";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -21,6 +24,9 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/otp" element={<OTPVerification />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
 
       {/* ---------- Protected Routes ---------- */}
       <Route

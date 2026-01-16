@@ -421,9 +421,24 @@ export default function Settings() {
           <h2 className="font-semibold text-base md:text-lg">Help</h2>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-6 flex-wrap">
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base">FAQ</button>
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base">Terms & condition</button>
-            <button className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base">Privacy Policy</button>
+            <button 
+              onClick={() => navigate("/faq")}
+              className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base hover:bg-[var(--color-bg-input)] transition-colors"
+            >
+              FAQ
+            </button>
+            <button 
+              onClick={() => navigate("/terms-and-conditions")}
+              className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base hover:bg-[var(--color-bg-input)] transition-colors"
+            >
+              Terms & condition
+            </button>
+            <button 
+              onClick={() => navigate("/privacy-policy")}
+              className="bg-[var(--color-bg-card)] px-4 py-2 rounded shadow-sm text-text-main text-sm md:text-base hover:bg-[var(--color-bg-input)] transition-colors"
+            >
+              Privacy Policy
+            </button>
             <div className="flex-1 hidden sm:block" />
             <button
               onClick={() => setShowLogoutConfirm(true)}

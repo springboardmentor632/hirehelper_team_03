@@ -11,6 +11,7 @@ import {
   FaBriefcase,
 } from "react-icons/fa";
 import { useToast } from "../components/Toast";
+import Footer from "../components/Footer";
 
 export default function OTPVerification() {
   const toast = useToast();
@@ -129,7 +130,7 @@ export default function OTPVerification() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
+    <div className="relative min-h-screen bg-[var(--color-bg-app)] overflow-hidden flex flex-col">
       {/* DESKTOP VERSION - Only visible on xl screens and above */}
       <div className="hidden xl:contents">
         {/* Decorative circles - Desktop */}
@@ -253,7 +254,7 @@ export default function OTPVerification() {
       </div>
 
       {/* Main container - Slightly adjusted for 320px */}
-      <div className="relative z-10 w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[580px] xl:max-w-[640px] px-2 py-6 sm:py-8">
+      <div className="relative z-10 w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[580px] xl:max-w-[640px] px-2 py-6 sm:py-8 flex-1 flex items-center justify-center">
         {/* Form card - Smaller on 320px */}
         <div className="bg-[rgba(101,174,233,0.3)] backdrop-blur-sm rounded-3xl sm:rounded-[45px] md:rounded-[55px] xl:rounded-[65px] p-3 sm:p-6 md:p-8 lg:p-10 xl:p-12 shadow-xl">
           <h2 className="text-[24px] sm:text-[36px] md:text-[44px] lg:text-[52px] xl:text-[60px] font-black text-[rgba(21,130,208,0.93)] mb-1 sm:mb-2 md:mb-3 lg:mb-4 xl:mb-5 text-center">
@@ -369,6 +370,7 @@ export default function OTPVerification() {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
