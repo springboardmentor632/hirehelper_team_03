@@ -11,7 +11,6 @@ import {
   FaBriefcase,
 } from "react-icons/fa";
 import { useToast } from "../components/Toast";
-import Footer from "../components/Footer";
 
 export default function OTPVerification() {
   const toast = useToast();
@@ -370,7 +369,6 @@ export default function OTPVerification() {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

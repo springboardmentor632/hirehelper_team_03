@@ -17,7 +17,6 @@ import {
   FaBriefcase,
 } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
-import Footer from "../components/Footer";
 import { useToast } from "../components/Toast";
 
 export default function App() {
@@ -296,7 +295,6 @@ export default function App() {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

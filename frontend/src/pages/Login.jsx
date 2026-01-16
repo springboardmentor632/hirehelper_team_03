@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import AuthBackground from "../components/AuthBackground";
-import Footer from "../components/Footer";
 import axios from "axios";
 
 export default function Login() {
@@ -203,7 +202,6 @@ export default function Login() {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

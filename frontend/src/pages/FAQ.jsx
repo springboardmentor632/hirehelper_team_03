@@ -105,20 +105,6 @@ export default function FAQ() {
         </div>
 
         {/* Contact Support */}
-        <div className="mt-8 md:mt-10 p-4 md:p-6 bg-[var(--color-bg-card)] rounded-lg border border-[var(--color-border)] shadow-card">
-          <h2 className="text-lg md:text-xl font-semibold text-text-main mb-2">
-            Still have questions?
-          </h2>
-          <p className="text-sm md:text-base text-text-muted mb-4">
-            If you couldn't find the answer you're looking for, please contact our support team.
-          </p>
-          <button
-            onClick={() => navigate("/settings")}
-            className="px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded text-sm md:text-base transition-colors"
-          >
-            Contact Support
-          </button>
-        </div>
       </div>
     </div>
   );
