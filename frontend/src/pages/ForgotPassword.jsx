@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { FaEnvelope, FaArrowLeft, FaLock } from "react-icons/fa";
-import Footer from "../components/Footer";
 
 const AuthBackground = () => {
   return (
@@ -124,10 +123,10 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[var(--color-bg-app)] flex flex-col">
+    <div className="relative h-screen max-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
       <AuthBackground />
 
-      <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6 flex-1 flex items-center justify-center">
+      <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         <div className="bg-[rgba(101,174,233,0.3)] backdrop-blur-sm rounded-4xl sm:rounded-[45px] md:rounded-[55px] xl:rounded-[65px] p-4 sm:p-6 md:p-6 xl:p-8 shadow-xl">
           <button
             onClick={handleBackToLogin}
@@ -270,7 +269,6 @@ export default function ForgotPassword() {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

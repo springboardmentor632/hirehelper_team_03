@@ -42,6 +42,18 @@ export default function App() {
     }
   }, []);
 
+  // Terms modal state
+  const [showTerms, setShowTerms] = useState(false);
+  const openTerms = () => setShowTerms(true);
+  const closeTerms = () => setShowTerms(false);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setShowTerms(false);
+    };
+    if (showTerms) document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [showTerms]);
 
   const handleChange = (e) => {
     setFormData({
@@ -123,11 +135,11 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[var(--color-bg-app)] flex flex-col">
+    <div className="relative h-screen max-h-screen bg-[var(--color-bg-app)] overflow-hidden flex items-center justify-center">
       <AuthBackground />
 
       {/* Main container - Responsive for all sizes */}
-      <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6 flex-1 flex items-center justify-center">
+      <div className="relative z-10 w-full max-w-[90%] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] px-4 py-6">
         {/* Form card */}
         <div className="block md:hidden w-full text-center mb-4">
           <h1 className="text-lg sm:text-2xl font-extrabold text-(--color-primary) tracking-tight">
@@ -293,6 +305,46 @@ export default function App() {
             </p>
           </div>
           </form>
+
+          {showTerms && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Terms and conditions"
+              className="fixed inset-0 z-50 flex items-center justify-center"
+            >
+              <div
+                className="absolute inset-0 bg-transparent"
+                onClick={closeTerms}
+                aria-hidden="true"
+              />
+
+              <div className="relative bg-[var(--color-bg-card)] text-text-main rounded-2xl shadow-card p-6 w-full max-w-2xl z-10">
+                <h3 className="text-2xl font-semibold text-center mb-4">Terms &amp; Conditions</h3>
+                <div className="text-sm text-text-muted space-y-3 mb-6 max-h-64 overflow-auto">
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  </p>
+                  <p>
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </p>
+                  <p>
+                    Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={closeTerms}
+                    className="px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
