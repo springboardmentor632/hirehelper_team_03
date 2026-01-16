@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TaskCard from "../components/TaskCard";
 import { FiMenu, FiSearch } from "react-icons/fi";
+import NotificationBell from "../components/NotificationBell";
 import SearchInput from "../components/SearchInput";
 import RequestPopup from "../components/RequestPopup";
-import NotificationBell from "../components/NotificationBell";
 import { getAuthHeader } from "../utils/auth";
  
 export default function Feed() {
@@ -121,14 +121,14 @@ export default function Feed() {
       )}
  
       {/* Main Content */}
-      <main className="flex-1 p-4 md:p-6 text-left text-[var(--color-text-main)] overflow-auto max-h-screen">
+      <main className="flex-1 p-4 md:p-6 text-left text-text-main overflow-auto max-h-screen">
         {/* Header */}
         <div className="mb-6">
           {/* Top Row */}
           <div className="flex items-center justify-between gap-4">
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden text-2xl text-[var(--color-text-main)]"
+              className="md:hidden text-2xl text-text-main"
               onClick={() => setSidebarOpen(true)}
             >
               <FiMenu />
@@ -137,7 +137,7 @@ export default function Feed() {
             {/* Title */}
             <div className="flex-1">
               <h1 className="text-xl font-semibold">Feed</h1>
-              <p className="text-sm text-[var(--color-text-muted)]">
+              <p className="text-sm text-text-muted">
                 Find tasks that need help
               </p>
             </div>
@@ -178,7 +178,7 @@ export default function Feed() {
         {/* Content: loading / error / grid */}
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <p className="text-[var(--color-text-muted)]">Loading feed...</p>
+            <p className="text-text-muted">Loading feed...</p>
           </div>
         ) : error ? (
           <div className="flex justify-center items-center h-40">
@@ -186,10 +186,10 @@ export default function Feed() {
           </div>
         ) : tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-center">
-            <p className="text-[var(--color-text-muted)] mb-2">
+            <p className="text-text-muted mb-2">
               No tasks available.
             </p>
-            <p className="text-xs text-[var(--color-text-muted)]">
+            <p className="text-xs text-text-muted">
               Check back later or create your own task.
             </p>
           </div>
