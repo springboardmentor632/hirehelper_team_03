@@ -22,7 +22,9 @@ export default function AddTask() {
   const [endTime, setEndTime] = useState("");
   const [category, setCategory] = useState("");
   const [picture, setPicture] = useState(null);
+  const [pictureName, setPictureName] = useState('');
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get today's date and current time in the correct format
   const getTodayDate = () => {
@@ -125,6 +127,8 @@ export default function AddTask() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (isSubmitting) return;
 
     // Validate before submitting
     if (!validateDateTime()) {
@@ -132,6 +136,7 @@ export default function AddTask() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const formData = new FormData();
       formData.append("title", title);
@@ -166,10 +171,14 @@ export default function AddTask() {
       setEndTime("");
       setCategory("");
       setPicture(null);
+      setPictureName('');
       setErrors({});
+      setIsSubmitting(false);
     } catch (error) {
       console.error("Error adding task:", error);
       toast.error(error.response?.data?.message || "Failed to add task.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -353,14 +362,19 @@ export default function AddTask() {
                         className="shrink-0 text-text-muted"
                         size={18}
                       />
-                      <span className="text-text-main">
-                        Upload Image
+                      <span className="text-text-main truncate max-w-[200px]">
+                        {pictureName || 'Upload Image'}
                       </span>
                     </div>
                     <input
                       type="file"
                       hidden
-                      onChange={(e) => setPicture(e.target.files[0])}
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        setPicture(file);
+                        setPictureName(file ? file.name : '');
+                      }}
+                      accept="image/*"
                     />
                   </label>
                 </Field>
@@ -369,9 +383,18 @@ export default function AddTask() {
               <div className="flex justify-end pt-4">
                 <button
                   type="submit"
-                  className="bg-[var(--color-primary)] text-white px-6 py-2 rounded-xl hover:bg-[var(--color-primary-hover)] transition-all shadow-lg"
+                  disabled={isSubmitting}
+                  className={`bg-[var(--color-primary)] text-white px-6 py-2 rounded-xl hover:bg-[var(--color-primary-hover)] transition-all shadow-lg flex items-center justify-center gap-2 min-w-[120px] ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
-                  Add Task
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Adding...
+                    </>
+                  ) : 'Add Task'}
                 </button>
               </div>
             </form>

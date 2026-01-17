@@ -207,8 +207,22 @@ export default function Notifications() {
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm md:text-base text-text-main break-words">{n.message || n.title}</div>
-                      <div className="text-xs md:text-sm text-text-muted mt-1">
+                      <div className="text-sm md:text-base font-medium text-text-main">{n.title}</div>
+                      <div className="text-sm text-text-main break-words mt-1">
+                        {n.message}
+                      </div>
+                      {(n.data?.senderName || n.data?.requesterName) && (
+                        <div className="mt-1 text-xs text-text-muted">
+                          {n.data?.senderName && `From: ${n.data.senderName}`}
+                          {n.data?.requesterName && ` • Requester: ${n.data.requesterName}`}
+                        </div>
+                      )}
+                      {n.data?.taskTitle && (
+                        <div className="mt-1 text-xs text-text-muted">
+                          Task: {n.data.taskTitle}
+                        </div>
+                      )}
+                      <div className="text-xs text-text-muted mt-1">
                         {formatDistanceToNow(new Date(n.createdAt || Date.now()), { addSuffix: true })}
                       </div>
                     </div>

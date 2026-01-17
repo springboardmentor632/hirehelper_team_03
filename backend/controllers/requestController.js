@@ -105,8 +105,14 @@ export const acceptRequest = async (req, res) => {
         request.requester.toString(),
         "REQUEST_ACCEPTED",
         "Request Accepted 🎉",
-        `Your request for "${updated.task.title}" was accepted`,
-        { taskId: updated.task._id, requestId: request._id }
+        `Your request for "${updated.task.title}" was accepted by ${req.user.name || 'the task owner'}`,
+        { 
+          taskId: updated.task._id, 
+          requestId: request._id,
+          taskTitle: updated.task.title,
+          senderName: req.user.name || 'Task Owner',
+          requesterName: request.requesterName || 'You'
+        }
       );
     } catch (notifErr) {
       console.error('Error creating accept notification:', notifErr);
@@ -142,8 +148,14 @@ export const rejectRequest = async (req, res) => {
         request.requester.toString(),
         "REQUEST_REJECTED",
         "Request Rejected",
-        `Your request for "${updated.task?.title || 'task'}" was rejected`,
-        { taskId: updated.task?._id, requestId: request._id }
+        `Your request for "${updated.task?.title || 'task'}" was rejected by ${req.user.name || 'the task owner'}`,
+        { 
+          taskId: updated.task?._id, 
+          requestId: request._id,
+          taskTitle: updated.task?.title || 'task',
+          senderName: req.user.name || 'Task Owner',
+          requesterName: request.requesterName || 'You'
+        }
       );
     } catch (notifErr) {
       console.error('Error creating reject notification:', notifErr);
