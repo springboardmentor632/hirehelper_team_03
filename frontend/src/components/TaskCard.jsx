@@ -66,7 +66,7 @@ export default function TaskCard({ task, onRequestClick }) {
       <h3 className="font-semibold mb-1">{title}</h3>
  
       {/* Description */}
-      <p className="text-xs text-text-muted mb-3">
+      <p className="text-xs text-text-muted mb-3 line-clamp-2">
         {description}
       </p>
 

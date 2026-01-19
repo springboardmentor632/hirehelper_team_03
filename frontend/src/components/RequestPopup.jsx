@@ -84,14 +84,16 @@ export default function RequestPopup({ isOpen, task, onClose }) {
  
           {/* CONTENT - Compact with reduced height */}
           <div className="p-3 sm:p-4">
-            {/* Task Title & Description - Compact */}
+            {/* Task Title & Description - Compact with Scrollable Description */}
             <div className="mb-3">
               <h3 className="font-medium text-[var(--color-text-main)] text-sm mb-1 line-clamp-1">
                 {task.title}
               </h3>
-              <p className="text-xs text-[var(--color-text-muted)] line-clamp-2">
-                {task.description}
-              </p>
+              <div className="bg-[var(--color-bg-input)] border border-[var(--color-border)] rounded-lg p-2 max-h-[80px] overflow-y-auto">
+                <p className="text-xs text-[var(--color-text-muted)]">
+                  {task.description}
+                </p>
+              </div>
             </div>
  
             {/* Date & Time - Compact */}
