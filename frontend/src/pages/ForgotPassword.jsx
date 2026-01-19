@@ -133,7 +133,7 @@ export default function ForgotPassword() {
             className="flex items-center gap-2 text-[#2a85c7] hover:text-[#1582d0] transition-colors mb-4 text-sm sm:text-base"
           >
             <FaArrowLeft size={14} />
-            <span>Back to Login</span>
+            <span>Back</span>
           </button>
 
           <h2 className="text-[28px] sm:text-[32px] md:text-[36px] lg:text-[42px] xl:text-[48px] font-black text-[rgba(21,130,208,0.93)] mb-4 text-center">

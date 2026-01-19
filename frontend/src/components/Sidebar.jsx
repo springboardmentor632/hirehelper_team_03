@@ -95,29 +95,29 @@ export default function Sidebar({ onClose }) {
       </div>
 
       {/* User Section */}
-      <div className="px-4 py-4 flex justify-between bg-[var(--color-sidebar-contrast)] rounded-md items-center">
+      <div className="px-4 py-4 flex justify-between bg-[var(--color-sidebar-contrast)] rounded-md items-center gap-2">
         <button
           onClick={() => navigate("/settings")}
-          className="flex gap-3 text-left items-center cursor-pointer"
+          className="flex gap-3 text-left items-center cursor-pointer min-w-0 flex-1"
         >
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-[var(--color-bg-card)] flex items-center justify-center flex-shrink-0">
-            {currentUser?.profile_picture ? (
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-[var(--color-primary)] flex items-center justify-center flex-shrink-0">
+            {currentUser?.profile_picture && !currentUser.profile_picture.includes('demo/image') ? (
               <img
                 src={currentUser.profile_picture}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-xs font-semibold text-[var(--color-primary)]">
-                {currentUser ? `${currentUser.first_name?.[0] || ''}${currentUser.last_name?.[0] || ''}` : 'U'}
+              <span className="text-sm font-bold text-white">
+                {currentUser ? `${currentUser.first_name?.[0] || ''}${currentUser.last_name?.[0] || ''}`.toUpperCase() : 'U'}
               </span>
             )}
           </div>
-          <div>
-            <p className="text-sm font-semibold">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold truncate">
               {currentUser ? `${currentUser.first_name} ${currentUser.last_name}` : "User"}
             </p>
-            <p className="text-xs opacity-80">
+            <p className="text-xs opacity-80 truncate">
               {currentUser?.email_id || "email not available"}
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function Sidebar({ onClose }) {
 
         <FiLogOut
           onClick={() => setShowLogoutConfirm(true)}
-          className="cursor-pointer"
+          className="cursor-pointer flex-shrink-0"
         />
       </div>
 

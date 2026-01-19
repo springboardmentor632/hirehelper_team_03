@@ -306,12 +306,18 @@ export default function Settings() {
 
               <div className="bg-[var(--color-bg-card)] p-4 rounded-lg shadow-card flex flex-col gap-3 items-center">
                 <p className="text-xs text-text-muted">Profile Photo</p>
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-[var(--color-bg-input)]">
-                  <img
-                    src={previewImage || user?.profile_picture}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-[var(--color-primary)] flex items-center justify-center">
+                  {(previewImage || user?.profile_picture) && !(previewImage?.includes('blob:') === false && user?.profile_picture?.includes('demo/image')) ? (
+                    <img
+                      src={previewImage || user?.profile_picture}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold text-white">
+                      {user ? `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase() : 'U'}
+                    </span>
+                  )}
                 </div>
                 <label className="mt-2 inline-flex items-center gap-2 cursor-pointer bg-[var(--color-bg-input)] px-3 py-2 rounded text-sm">
                   <input

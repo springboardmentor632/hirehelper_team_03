@@ -35,6 +35,9 @@ export default function TaskCard({ task, onRequestClick }) {
         p-4
         w-full
         max-w-sm
+        flex
+        flex-col
+        h-full
       "
     >
       {/* Show image if exists */}
@@ -42,7 +45,7 @@ export default function TaskCard({ task, onRequestClick }) {
         <img
           src={picture}
           alt="Task"
-          className="w-full h-40 object-cover rounded-card"
+          className="w-full h-40 object-cover rounded-card mb-3"
         />
       )}
  
@@ -66,6 +69,9 @@ export default function TaskCard({ task, onRequestClick }) {
       <p className="text-xs text-text-muted mb-3">
         {description}
       </p>
+
+      {/* Spacer to push footer to bottom */}
+      <div className="flex-1" />
  
       {/* Location & Time */}
       <div className="text-xs text-text-muted mb-3 space-y-1">
