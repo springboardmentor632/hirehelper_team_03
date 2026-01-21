@@ -151,7 +151,7 @@ export default function MyRequests() {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredRequests.map((r) => (
               <MyRequestCard
                 key={r._id}
